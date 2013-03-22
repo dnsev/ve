@@ -1,0 +1,103 @@
+.APITestDragDropInfoContainer {
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0,0,0,0.125);
+	z-index: 100;
+	font-size: 4em;
+	font-weight: bold;
+}
+.APITestDragDropInfoContainer.APITestDragDropInfoContainerDisabled {
+	display: none !important;
+}
+.APITestDragDropInfoContainerInner {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+.APITestDragDropInfoTextContainerOuter {
+	position: absolute;
+	top: 50%;
+	display: inline-block;
+}
+.APITestDragDropInfoTextContainerInner {
+	position: relative;
+}
+.APITestDragDropInfoText {
+	position: absolute;
+	padding: 5px;
+	color: #28013f;
+	text-shadow: 0px 3px 0px #debdf1;
+}
+
+.APITestVideoRegion {
+	position: relative;
+	background: rgba(123,28,177,0.5);
+	text-align: center;
+}
+.APITestVideoContainer {
+	display: inline-block;
+}
+.APITestVideoRegionText {
+	font-size: 3em;
+	display: inline-block;
+}
+.APITestVideoRegionText.APITestVideoRegionTextDisabled {
+	display: none !important;
+}
+
+.APITestVideoSeekRegion {
+	background: rgba(123,28,177,0.5);
+	display: block;
+	width: 100%;
+	height: 20px;
+	border-color: #7b1cb1;
+	border-style: solid;
+	border-width: 1px 0px 1px 0px;
+	position: relative;
+	cursor: pointer;
+}
+.APITestVideoSeekBar {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 0%;
+	background: rgba(255,255,255,0.5);
+}
+.APITestVideoSeekLabel {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	font-size: 16px;
+	text-align: center;
+}
+
+.APITestVideoFilePanel {
+	background: rgba(123,28,177,0.5);
+}
+.APITestVideoFile {
+	display: inline-block;
+}
+.APITestVideoFileControls {
+	float: right;
+}
+.APITestVideoFileControlsEnd {
+	clear: both;
+}
+
+.APITestSeparatorContainer {
+	padding: 8px 0px 8px 0px;
+}
+.APITestSeparatorContainerLarge {
+	padding: 40px 0px 40px 0px;
+}
+.APITestSeparator {
+	border-top: 1px solid #debdf1;
+}
+

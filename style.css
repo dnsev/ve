@@ -1,0 +1,475 @@
+body {
+	margin: 0px;
+	padding: 0px;
+	font-family: Verdana;
+	font-size: 16px;
+	background: #f4eff8;
+	overflow-x: auto;
+	overflow-y: scroll;
+}
+ol, ul {
+	margin: 2px 0px 2px 1.6em;
+	padding: 0px;
+}
+li + li {
+	margin-top: 2px;
+}
+ol {
+	list-style-type: decimal;
+}
+p {
+	margin: 0px;
+	padding: 0px;
+}
+p + p, p + div, p + ol, p + ul, ol + p, ul + p {
+	margin-top: 0.4em !important;
+}
+p + p.Separated {
+	margin-top: 1.2em !important;
+}
+
+*::selection {
+	color: #f4eff8;
+	background: #400363;
+}
+*::-moz-selection {
+	color: #f4eff8;
+	background: #400363;
+}
+
+.Chrome {
+}
+.Firefox {
+}
+.SpecificBrowser {
+}
+.UniversalBrowser {
+}
+.BrowserDisplayOn {
+}
+.BrowserDisplayOff {
+	display: none !important;
+}
+
+.FeaturesContainerOuter {
+	font-size: 16px;
+	text-align: center;
+	margin-bottom: 16px;
+	line-height: 1.5em;
+	width: 100%;
+}
+.FeaturesContainer {
+	display: block;
+	font-size: 16px;
+	text-align: center;
+	margin-bottom: 0px;
+	width: 80%;
+	display: inline-block;
+}
+.Feature {
+	display: inline-block;
+	margin: 0px 8px 0px 8px;
+}
+.FeatureText {
+}
+.Content a.FeatureLink:link, .Content a.FeatureLink:visited {
+	display: inline-block;
+	text-decoration: none;
+	color: #28013f;
+}
+.Content a.FeatureLink:hover, .Content a.FeatureLink:active {
+	color: #b872e1;
+}
+
+.ExtrasContainerPre {
+	height: 32px;
+}
+.ExtrasContainer {
+	font-size: 16px;
+	text-align: center;
+	margin-top: 8px;
+	position: fixed;
+	bottom: 0;
+	z-index: 1;
+	width: inherit;
+	background: #f4eff8;
+	box-shadow: 0px 0px 16px 16px #f4eff8;
+}
+.Extra {
+	display: inline-block;
+	margin: 0px 8px 0px 8px;
+	margin-bottom: 32px;
+}
+.Content .Extra a:link, .Content .Extra a:visited {
+	color: #c497e7;
+	text-decoration: none;
+}
+.Content .Extra a:hover {
+	color: #7b1cb1;
+	text-decoration: underline;
+}
+.Content .Extra a:active {
+	color: #400363;
+	text-decoration: underline;
+}
+
+.PageVariableDisplay {
+}
+.PageVariableDisplayInv {
+}
+.PageVariableDisplayOn {
+}
+.PageVariableDisplayOff {
+	display: none !important;
+}
+
+.TitleContainer {
+	min-width: 640px;
+	text-align: center;
+	background: #7b1cb1;
+	padding: 16px 0px 32px 0px;
+	overflow: hidden;
+	position: relative;
+	z-index: 2;
+}
+.TitleContainerInner {
+	position: relative;
+	display: inline-block;
+}
+.AuthorContainer {
+	display: inline-block;
+	position: absolute;
+	top: 10px;
+	right: 0;
+}
+a.AuthorLink, a.AuthorLink:visited {
+	color: #7b1cb1;
+	text-shadow: 0px 0px 4px rgba(255,255,255,0.5);
+	font-size: 16px;
+	font-weight: bold;
+	font-style: italic;
+	text-decoration: none;
+}
+a.AuthorLink:hover {
+	color: #ffffff !important;
+	color: rgba(255,255,255,0.5) !important;
+}
+a.AuthorLink:active {
+	color: #ffffff !important;
+	color: rgba(255,255,255,0.5) !important;
+	text-shadow: 0px 0px 4px rgba(0,0,0,0.5);
+}
+a.Title, a.Title:visited, a.Title:hover, a.Title:active {
+	color: #debdf1;
+	text-shadow: 0px 4px 0px rgba(0,0,0,0.5);
+	font-size: 88px;
+	font-weight: bold;
+	display: inline-block;
+	vertical-align: middle;
+	text-decoration: none !important;
+}
+.SubTitleSeparator {
+	color: #b872e1;
+	text-shadow: 0px 4px 0px rgba(0,0,0,0.5);
+	font-size: 64px;
+	font-weight: bold;
+	display: inline-block;
+	vertical-align: middle;
+	padding: 0px 6px 0px 6px;
+}
+.SubTitleContainer {
+	position: relative;
+	display: inline-block;
+}
+.SubTitle {
+	color: #b872e1;
+	text-shadow: 0px 4px 0px rgba(0,0,0,0.5);
+	font-size: 64px;
+	font-weight: bold;
+	display: inline-block;
+	vertical-align: middle;
+}
+.SubTitleSegment {
+	display: inline-block;
+	vertical-align: top;
+}
+.SubTitleSegment.SubTitleSegmentClickable {
+	cursor: pointer;
+}
+.SubTitleSegment.SubTitleSegmentHidable {
+	overflow: hidden;
+}
+.SubTitleSegment.SubTitleSegmentHidden {
+	display: none !important;
+}
+.SubTitleDescription {
+	display: block;
+	position: absolute;
+	left: 0;
+	right: -100px;
+	top: 100%;
+	text-align: left;
+	padding-top: 6px;
+}
+.NavigationLinkSeparator {
+	display: inline-block;
+	padding: 0px 6px 0px 6px;
+	color: #debdf1;
+	color: rgba(255,255,255,0.5);
+	vertical-align: middle;
+	font-size: 16px;
+}
+a.NavigationLinkCurrent.NavigationLink, a.NavigationLinkCurrent.NavigationLink:visited {
+	text-decoration: underline !important;
+	color: #ecddf8;
+}
+a.NavigationLink, a.NavigationLink:visited {
+	color: #debdf1;
+	font-size: 18px;
+	text-decoration: none;
+	vertical-align: middle;
+}
+a.NavigationLink:hover {
+	color: #ffffff;
+}
+a.NavigationLink:active {
+	color: #ffffff;
+	text-decoration: underline !important;
+}
+a.Version, a.Version:visited, a.Version:hover, a.Version:active {
+	display: block;
+	position: absolute;
+	right: 0;
+	top: 0;
+
+	color: #b872e1;
+	text-shadow: 0px 2px 0px rgba(0,0,0,0.5);
+	font-weight: bold;
+	font-size: 20px;
+	text-decoration: none;
+}
+
+.TitleBorder {
+	min-width: 640px;
+	width: 100%;
+	height: 4px;
+	background: rgba(123,28,177,0.5);
+}
+
+.ContentContainer {
+	text-align: center;
+}
+.ContentWidth {
+	width: 640px;
+}
+.Content {
+	display: none;
+	text-align: left;
+	font-size: 20px;
+	padding-bottom: 64px;
+	padding-top: 12px;
+	color: #400363;
+}
+.ContentActive {
+	display: inline-block !important;
+}
+
+.ContentHeader {
+	color: #28013f;
+}
+.ContentHeaderTitle {
+	font-weight: bold;
+}
+.ContentBody {
+	color: #400363;
+	padding: 16px 0px 16px 16px;
+}
+.ContentBodyStub {
+	padding: 16px 0px 0px 16px;
+}
+.ContentBodyInner {
+}
+.ContentInstructionList {
+}
+.ContentInstructionListUnordered {
+	list-style-type: disc;
+	margin-left: 0.8em !important;
+}
+.ContentInstructionListSmall {
+	font-size: 14px;
+}
+
+.Notice {
+	font-style: italic;
+}
+
+.InternalLink {
+}
+.HoverShowControl {
+}
+.HoverShow {
+	display: none;
+}
+.HoverShowControl:hover .HoverShow {
+	display: inline;
+}
+
+.Hardlink {
+}
+.HardlinkSeparator {
+	display: inline-block;
+	padding: 0px 6px 0px 6px;
+}
+
+.InfoLink {
+}
+.LinkInfo {
+	display: none;
+	color: #c497e7;
+}
+.InfoLink:hover + .LinkInfo {
+	display: inline !important;
+}
+
+.Content a, .Content a:link, .Content a:visited, .ImagePreviewOverlay a, .ImagePreviewOverlay a:link, .ImagePreviewOverlay a:visited {
+	color: #7b1cb1;
+	text-decoration: none;
+}
+.Content a:hover, .ImagePreviewOverlay a:hover {
+	color: #400363;
+	text-decoration: underline;
+}
+.Content a:active, .ImagePreviewOverlay a:active {
+	color: #400363;
+	text-decoration: underline;
+}
+
+a.InstallLink, a.InstallLink:visited {
+	display: inline-block;
+	color: #7b1cb1;
+	text-decoration: none !important;
+	border-bottom: 1px dashed #7b1cb1;
+	margin-bottom: -1px;
+}
+a.InstallLink:hover {
+	color: #400363;
+	text-decoration: none !important;
+	border-bottom: 1px dashed #400363 !important;
+}
+a.InstallLink:active {
+	color: #400363;
+	text-decoration: none !important;
+	border-bottom: 1px solid #400363 !important;
+}
+
+.ChangeLogLabel {
+	font-weight: bold;
+	font-style: italic;
+}
+.ChangeLogLabelCurrent {
+	font-weight: normal !important;
+}
+.ChangeLogList {
+	font-size: 18px;
+	margin: 2px 0px 2px 32px;
+}
+.ChangeLogList li {
+	padding: 1px 0px 1px 0px;
+}
+.ChangeLogList + .ChangeLogLabel {
+	padding-top: 16px;
+}
+
+.ImagePreviewOverlay {
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0,0,0,0.25);
+	z-index: 10;
+	display: none;
+}
+.ImagePreviewOverlayInner {
+	position: relative;
+	text-align: center;
+	width: 100%;
+	height: 100%;
+}
+.ImagePreviewBox {
+	position: absolute;
+	display: inline-block;
+	top: 50%;
+}
+.ImagePreviewBoxInner1 {
+	position: relative;
+}
+.ImagePreviewBoxInner2 {
+	position: absolute;
+	background: #f4eff8;
+	padding: 16px;
+	box-shadow: 0px 0px 0px 4px rgba(123,28,177,0.5);
+}
+.ImagePreviewImageContainer {
+	display: block;
+	text-align: center;
+	margin-bottom: 10px;
+}
+.ImagePreviewImageContainer img {
+	display: inline-block;
+}
+.ImagePreviewDescriptionContainer {
+	display: block;
+	text-align: left;
+	max-width: 640px;
+}
+
+.ImageLink {
+}
+.ImageDescription {
+	display: none;
+}
+
+.HiddenHoverMaster {
+}
+.HiddenHover {
+	display: none;
+}
+.HiddenHoverMaster:hover .HiddenHover {
+	display: inline !important;
+}
+
+.DownloadLinkExtension {
+	color: #b872e1;
+}
+
+.Asterisk {
+	display: inline-block;
+	margin-left: 4px;
+	font-size: 14px;
+	vertical-align: top;
+}
+.AsteriskMessage {
+	font-size: 14px;
+}
+
+.InstructionsImageLink {
+	display: inline-block;
+	float: right;
+	opacity: 0.0;
+}
+.InstructionsImageLinkContainer:hover > .InstructionsImageLink {
+	opacity: 1.0 !important;
+}
+.InstructionsImageLinkClear {
+	clear: both;
+}
+.SpacedList > li + li{
+	margin-top: 0.6em;
+}
+
+.CenterLinkContainer {
+	text-align: center;
+	margin: 20px 0px 20px 0px;
+	display: block;
+}
