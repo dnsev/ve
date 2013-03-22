@@ -1,2 +1,9 @@
+1.1
+- Added a custom text field so it would display properly and update properly
+- Made temporary sound stay in memory and not require a file stream
+- Fixed typos
+- Slightly changed the format of the output files
+- Made output file masking work properly
+
 1.0
 - Initial version
