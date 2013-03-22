@@ -461,11 +461,13 @@ function image_preview_close() {
 // API test
 function launch_api() {
 	// Load script
-	$($("head")[0])
-	.append(
-		$(document.createElement("script"))
-		.attr("src", "api_test.js")
-	);
+	if (!(window.location.protocol == "file:" && ((navigator.userAgent + "").indexOf(" Chrome/") >= 0))) {
+		$($("head")[0])
+		.append(
+			$(document.createElement("script"))
+			.attr("src", "api_test.js")
+		);
+	}
 }
 
 // Entry

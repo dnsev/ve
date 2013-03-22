@@ -1265,11 +1265,35 @@ var VPlayer = (function () {
 			@param ms_time
 				the time in milliseconds
 		*/
-		var str = "";
-		for (var i = 0; i < css_prefixes.length; ++i) {
-			str += css_prefixes[i] + "animation-duration:" + ms_time + "ms;"
-		}
+		var str = "animation-duration:" + ms_time + "ms;";
+		str += "-webkit-animation-duration:" + ms_time + "ms;";
 		elem.setAttribute("style", elem.getAttribute("style") + str);
+	}
+	function clear_animation_time(elem) {
+		/**
+			Clears the animation duration of an element.
+
+			@param elem
+				the DOM element to modify
+		*/
+		clear_animation_time_single(elem, "animationDuration");
+		clear_animation_time_single(elem, "webkitAnimationDuration");
+		clear_animation_time_single(elem, "animation");
+		clear_animation_time_single(elem, "webkitAnimation");
+	}
+	function clear_animation_time_single(elem, name) {
+		/**
+			Clears the animation duration of an element.
+
+			@param elem
+				the DOM element to modify
+			@param name
+				the style name to clear
+		*/
+		try {
+			elem.style[name] = "";
+		}
+		catch (e) {}
 	}
 	function init_once() {
 		/**
@@ -1951,6 +1975,7 @@ var VPlayer = (function () {
 				this.video_tag.style.opacity = window.getComputedStyle(this.video_tag).opacity;
 				this.video_tag.className = remove_class(this.video_tag.className, css_video_opacity_animations[1]);
 			}
+			clear_animation_time(this.video_tag);
 		},
 
 
@@ -1985,6 +2010,7 @@ var VPlayer = (function () {
 				this.video_tag.className = remove_class(this.video_tag.className, css_video_opacity_animations[1]);
 				this.video_tag.style.opacity = "0.0";
 			}
+			clear_animation_time(this.video_tag);
 		},
 
 		/**
@@ -2486,6 +2512,15 @@ var VPlayer = (function () {
 					this_private.on_video_error.call(self);
 				});
 				this.video_tag.addEventListener("animationend", function (event) {
+					this_private.on_video_animation_end.call(self);
+				});
+				this.video_tag.addEventListener("webkitAnimationEnd", function (event) {
+					this_private.on_video_animation_end.call(self);
+				});
+				this.video_tag.addEventListener("oanimationend", function (event) {
+					this_private.on_video_animation_end.call(self);
+				});
+				this.video_tag.addEventListener("MSAnimationEnd", function (event) {
 					this_private.on_video_animation_end.call(self);
 				});
 				// Load video

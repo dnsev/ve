@@ -1,24 +1,30 @@
 // Test
 (function () {
 
-	// Load API
-	var api_load_state = 0;
-	$.getScript("ve_api.js", function () {
-		if (++api_load_state == 2) api_setup();
-	});
-	// Load test CSS
-	$.ajax({
-		url: "api_test.css",
-		dataType: "text",
-		success: function (data) {
-			$($("head")[0])
-			.append(
-				$(document.createElement("style"))
-				.html(data)
-			);
+	if (window.location.protocol == "file:" && ((navigator.userAgent + "").indexOf(" Chrome/") >= 0)) {
+		$(document).ready(function () { api_setup(); });
+	}
+	else {
+		// Load API
+		var api_load_state = 0;
+		$.getScript("ve_api.js", function () {
 			if (++api_load_state == 2) api_setup();
-		}
-	});
+		});
+
+		// Load test CSS
+		$.ajax({
+			url: "api_test.css",
+			dataType: "text",
+			success: function (data) {
+				$($("head")[0])
+				.append(
+					$(document.createElement("style"))
+					.html(data)
+				);
+				if (++api_load_state == 2) api_setup();
+			}
+		});
+	}
 
 	// Element creation functions
 	function E(elem) {
