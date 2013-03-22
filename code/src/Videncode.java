@@ -1236,7 +1236,7 @@ public final class Videncode extends ThreadManager {
 				// Open image and copy
 				BufferedInputStream in = new BufferedInputStream(new FileInputStream(this.imageFile));
 				while ((length = in.read(buffer)) >= 0) {
-					if (this.maskFile) this.maskModifyFromBytes(buffer, length);
+					this.maskModifyFromBytes(buffer, length);
 					out.write(buffer, 0, length);
 				}
 				in.close();
@@ -1257,7 +1257,7 @@ public final class Videncode extends ThreadManager {
 				out.write(temp);
 
 				// Flags2
-				if (this.muxAudioAndVideo) {
+				if ((this.flags1 & 0x03) == 0x03) {
 					temp[0] = (byte) this.flags2;
 					this.maskBytes(temp, temp.length);
 					out.write(temp);
@@ -1276,7 +1276,7 @@ public final class Videncode extends ThreadManager {
 				out.write(temp);
 
 				// Sync offset
-				if (!this.muxAudioAndVideo) {
+				if ((this.flags1 & 0x03) == 0x03) {
 					double v = this.syncOffset;
 					int intPart = (int) v;
 					v -= intPart;
@@ -1312,7 +1312,7 @@ public final class Videncode extends ThreadManager {
 					// Open video and copy
 					in = new BufferedInputStream(new FileInputStream(f));
 					while ((length = in.read(buffer)) >= 0) {
-						if (this.maskFile) this.maskBytes(buffer, length);
+						this.maskBytes(buffer, length);
 						out.write(buffer, 0, length);
 					}
 					in.close();
@@ -1331,7 +1331,7 @@ public final class Videncode extends ThreadManager {
 					// Open video and copy
 					in = new BufferedInputStream(new FileInputStream(f));
 					while ((length = in.read(buffer)) >= 0) {
-						if (this.maskFile) this.maskBytes(buffer, length);
+						this.maskBytes(buffer, length);
 						out.write(buffer, 0, length);
 					}
 					in.close();
@@ -1349,18 +1349,23 @@ public final class Videncode extends ThreadManager {
 			this.completed(this.finalOutputFile);
 		}
 		private final void maskBytes(byte[] b, int length) {
+			if (!this.maskFile) return;
+
+			int j;
 			for (int i = 0; i < length; ++i) {
 				this.maskValue = (int) (this.maskValue * 102293L + 390843L);
 				this.mask = this.maskValue >>> 24;
-				b[i] = (byte) (b[i] ^ this.mask);
-				this.maskValue += b[i];
+				this.maskValue += (j = (((int) b[i]) & 0xFF));
+				b[i] = (byte) (j ^ this.mask);
 			}
 		}
 		private final void maskModifyFromBytes(final byte[] b, int length) {
+			if (!this.maskFile) return;
+
 			for (int i = 0; i < length; ++i) {
 				this.maskValue = (int) (this.maskValue * 102293L + 390843L);
 				this.mask = this.maskValue >>> 24;
-				this.maskValue += (b[i] ^ this.mask);
+				this.maskValue += ((((int) b[i]) & 0xFF) ^ this.mask);
 			}
 		}
 		private final int intToVarLengthBytes(int value, byte[] bytes) {
@@ -2313,7 +2318,7 @@ public final class Videncode extends ThreadManager {
 		}
 
 		// No audio?
-		if (encode && this.getAudioFileTemp() == null) {
+		if (encode && this.getAudioFileTemp() == null && this.getAudioFileSource() != null) {
 			if (state >= 1) {
 				this.stopEncoding(true);
 				this.signalChange(new VidencodeChangeEvent(
@@ -2338,7 +2343,7 @@ public final class Videncode extends ThreadManager {
 		}
 
 		// No video?
-		if (encode && this.getVideoFileTemp() == null) {
+		if (encode && this.getVideoFileTemp() == null && this.getVideoFileSource() != null) {
 			if (state >= 2) {
 				this.stopEncoding(true);
 				this.signalChange(new VidencodeChangeEvent(
@@ -3165,8 +3170,8 @@ public final class Videncode extends ThreadManager {
 		double syncOffset = (videoIsLonger ? this.getAudioFileSourceSyncOffset() : this.getVideoFileSourceSyncOffset());
 		int flags1 = (
 			(videoFile != null ? 0x01 : 0x00) |
-			(audioFile != null ? 0x02 : 0x00) |
-			(muxAudioAndVideo ? 0x04 : 0x00) |
+			(audioFile != null && !muxAudioAndVideo ? 0x02 : 0x00) |
+			// 0x04 : reserved
 			// 0x08 : reserved
 			(this.getSyncVideoUseFade(true) && !muxAudioAndVideo ? 0x10 : 0x00) |
 			(this.getSyncVideoUseFade(false) && !muxAudioAndVideo ? 0x20 : 0x00) |
@@ -3177,8 +3182,8 @@ public final class Videncode extends ThreadManager {
 			(this.getSyncVideoState(true)) | // 0x01 , 0x02
 			(this.getSyncVideoState(false) << 2) | // 0x04 , 0x08
 			(this.getSyncAudioState(true) == SYNC_LOOP ? 0x10 : 0x00) |
-			(this.getSyncAudioState(false) == SYNC_LOOP ? 0x20 : 0x00) |
-			(videoIsLonger ? 0x40 : 0x00)
+			(this.getSyncAudioState(false) == SYNC_LOOP ? 0x20 : 0x00)
+			// 0x40 : reserved
 			// 0x80 : reserved
 		);
 
@@ -4380,12 +4385,11 @@ public final class Videncode extends ThreadManager {
 			// Get the decimal part
 			if (decimalLength > 0) {
 				number -= d;
-				if (number > Videncode.DECIMAL_THRESHOLD) {
-					temp = Double.valueOf(number).toString();
-					d = temp.length();
-					if (d > 2 + decimalLength) d = 2 + decimalLength;
-					sb.append(temp.substring(1, d));
-				}
+				StringBuilder format = new StringBuilder();
+				format.append('.');
+				for (int j = 0; j < decimalLength; ++j) format.append('#');
+				temp = (new DecimalFormat(format.toString()).format(number));
+				if (!temp.equals(".0")) sb.append(temp);
 			}
 		}
 
@@ -4457,12 +4461,11 @@ public final class Videncode extends ThreadManager {
 		// Decimal seconds
 		if (tcLen[i] > 0) {
 			time -= (int) time;
-			if (time > Videncode.DECIMAL_THRESHOLD) {
-				String s = Double.valueOf(time).toString();
-				len = s.length();
-				if (len > 2 + tcLen[i]) len = 2 + tcLen[i];
-				sb.append(s.substring(1, len));
-			}
+			StringBuilder format = new StringBuilder();
+			format.append('.');
+			for (int j = 0; j < tcLen[i]; ++j) format.append('#');
+			String temp = (new DecimalFormat(format.toString()).format(time));
+			if (!temp.equals(".0")) sb.append(temp);
 		}
 
 		return sb.toString();

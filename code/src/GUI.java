@@ -262,7 +262,7 @@ public final class GUI extends JFrame {
 	private File imagePreviewLastSearchDir = Main.getAppDir();
 	private JBarSlider imagePreviewTimeSlider = null;
 	private boolean imagePreviewTimecodeLocationModifying = false;
-	private JTextField imagePreviewTimecodeLocation = null;
+	private JTextFieldCustom imagePreviewTimecodeLocation = null;
 	private JLabel fileLabelImage = null;
 	//}
 
@@ -282,7 +282,7 @@ public final class GUI extends JFrame {
 	private JLabel videoFrameRateDisplay = null;
 	private File videoLastSearchDir = Main.getAppDir();
 	private JRangeSlider videoEncodingDurationRangeslider = null;
-	private JTextField[] videoEncodingDurationTimecode = new JTextField[]{ null , null };
+	private JTextFieldCustom[] videoEncodingDurationTimecode = new JTextFieldCustom[]{ null , null };
 	private boolean videoEncodeAutoQualityEnabledDefault = true;
 	private boolean videoEncodeAutoQualityEnabled = this.videoEncodeAutoQualityEnabledDefault;
 	private JCheckBox videoEncodeAutoQualitySelect = null;
@@ -311,7 +311,7 @@ public final class GUI extends JFrame {
 	private JRangeSlider audioEncodingDurationRangeslider = null;
 	private JLabel audioTimecodeStart = null;
 	private JLabel audioTimecodeEnd = null;
-	private JTextField[] audioEncodingDurationTimecode = new JTextField[]{ null , null };
+	private JTextFieldCustom[] audioEncodingDurationTimecode = new JTextFieldCustom[]{ null , null };
 
 	private boolean audioBitrateSelectionComboBoxModifying = false;
 	private JComboBox<Videncode.Bitrate> audioBitrateSelectionComboBox = null;
@@ -340,9 +340,9 @@ public final class GUI extends JFrame {
 			new JLabel[]{ null , null },
 			new JLabel[]{ null , null }
 		};
-		private JTextField[][] rangeEncodeTimecodes = new JTextField[][]{
-			new JTextField[]{ null , null },
-			new JTextField[]{ null , null }
+		private JTextFieldCustom[][] rangeEncodeTimecodes = new JTextFieldCustom[][]{
+			new JTextFieldCustom[]{ null , null },
+			new JTextFieldCustom[]{ null , null }
 		};
 
 		private JPanel[] optionPanels = new JPanel[]{ null , null };
@@ -396,10 +396,10 @@ public final class GUI extends JFrame {
 		private JLabel errorMessage = null;
 
 		private JButton encodeButton = null;
-		private JTextField outputFilename = null;
+		private JTextFieldCustom outputFilename = null;
 		private JComboBox<Extension> outputFilenameExt = null;
 		private boolean outputFilenameExtChanging = false;
-		private JTextField outputTag = null;
+		private JTextFieldCustom outputTag = null;
 	}
 	private EncodeTabVars encode = new EncodeTabVars();
 	//}
@@ -412,7 +412,7 @@ public final class GUI extends JFrame {
 	private class SettingsVars {
 		private JComboBox<Integer> ffmpegThreadSelection = null;
 
-		private JTextField outputMaxSize = null;
+		private JTextFieldCustom outputMaxSize = null;
 
 		private JComboBox<String> guiMainTabSelection = null;
 
@@ -863,7 +863,8 @@ public final class GUI extends JFrame {
 		.set("startup_check", JSON.node(new Boolean(this.ffmpegStartupCheck)));
 	}
 
-	private final void setupTimecodeLabels(JPanel container, JLabel timecodeFirst, JLabel timecodeLast, JTextField[] ranges, ActionListener[] rangeActionListeners, FocusListener[] rangeFocusListeners) {
+
+	private final void setupTimecodeLabels(JPanel container, JLabel timecodeFirst, JLabel timecodeLast, JTextFieldCustom[] ranges, ChangeListener[] rangeListeners) {
 		final GUI self = this;
 		JPanel panel;
 		JLabel text;
@@ -912,8 +913,7 @@ public final class GUI extends JFrame {
 				ranges[i].setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 				ranges[i].setOpaque(false);
 				ranges[i].setPreferredSize(new Dimension(32, 20));
-				ranges[i].addActionListener(rangeActionListeners[i]);
-				ranges[i].addFocusListener(rangeFocusListeners[i]);
+				ranges[i].addCustomChangeListener(rangeListeners[i]);
 			}
 		//}
 
@@ -1001,25 +1001,16 @@ public final class GUI extends JFrame {
 		gc.gridx = 0;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.fill = GridBagConstraints.HORIZONTAL;
-		this.imagePreviewTimecodeLocation = new JTextField();
+		this.imagePreviewTimecodeLocation = new JTextFieldCustom();
 		this.imagePreviewTimecodeLocation.setFont(this.fonts.text);
 		this.imagePreviewTimecodeLocation.setForeground(this.colors.textAlt1);
 		this.imagePreviewTimecodeLocation.setHorizontalAlignment(JTextField.CENTER);
 		this.imagePreviewTimecodeLocation.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		this.imagePreviewTimecodeLocation.setOpaque(false);
-		this.imagePreviewTimecodeLocation.addActionListener(new ActionListener(){
+		this.imagePreviewTimecodeLocation.addCustomChangeListener(new ChangeListener() {
 			@Override
-			public final void actionPerformed(ActionEvent event) {
-				self.onImageTimeTextModify((JTextField) event.getSource());
-			}
-		});
-		this.imagePreviewTimecodeLocation.addFocusListener(new FocusListener(){
-			@Override
-			public final void focusGained(FocusEvent event) {
-			}
-			@Override
-			public final void focusLost(FocusEvent event) {
-				self.onImageTimeTextModify((JTextField) event.getSource());
+			public final void stateChanged(ChangeEvent event) {
+				self.onImageTimeTextModify((JTextFieldCustom) event.getSource());
 			}
 		});
 		cell.add(this.imagePreviewTimecodeLocation, gc);
@@ -1490,41 +1481,21 @@ public final class GUI extends JFrame {
 			timePanel,
 			this.timecodeStart[1] = new JLabel(Videncode.timeToString(0.0, new int[]{0,2,2,2})),
 			this.timecodeEnd[1] = new JLabel(),
-			new JTextField[]{
-				this.videoEncodingDurationTimecode[0] = new JTextField(),
-				this.videoEncodingDurationTimecode[1] = new JTextField()
+			new JTextFieldCustom[]{
+				this.videoEncodingDurationTimecode[0] = new JTextFieldCustom(),
+				this.videoEncodingDurationTimecode[1] = new JTextFieldCustom()
 			},
-			new ActionListener[]{
-				new ActionListener(){
+			new ChangeListener[]{
+				new ChangeListener() {
 					@Override
-					public final void actionPerformed(ActionEvent event) {
-						self.onVideoEncodeDurationTextModify(0, (JTextField) event.getSource());
+					public final void stateChanged(ChangeEvent event) {
+						self.onVideoEncodeDurationTextModify(0, (JTextFieldCustom) event.getSource());
 					}
 				},
-				new ActionListener(){
+				new ChangeListener() {
 					@Override
-					public final void actionPerformed(ActionEvent event) {
-						self.onVideoEncodeDurationTextModify(1, (JTextField) event.getSource());
-					}
-				}
-			},
-			new FocusListener[]{
-				new FocusListener(){
-					@Override
-					public final void focusGained(FocusEvent event) {
-					}
-					@Override
-					public final void focusLost(FocusEvent event) {
-						self.onVideoEncodeDurationTextModify(0, (JTextField) event.getSource());
-					}
-				},
-				new FocusListener(){
-					@Override
-					public final void focusGained(FocusEvent event) {
-					}
-					@Override
-					public final void focusLost(FocusEvent event) {
-						self.onVideoEncodeDurationTextModify(1, (JTextField) event.getSource());
+					public final void stateChanged(ChangeEvent event) {
+						self.onVideoEncodeDurationTextModify(1, (JTextFieldCustom) event.getSource());
 					}
 				}
 			}
@@ -2239,41 +2210,21 @@ public final class GUI extends JFrame {
 			timePanel,
 			this.audioTimecodeStart = new JLabel(Videncode.timeToString(0.0, new int[]{0,2,2,2})),
 			this.audioTimecodeEnd = new JLabel(),
-			new JTextField[]{
-				this.audioEncodingDurationTimecode[0] = new JTextField(),
-				this.audioEncodingDurationTimecode[1] = new JTextField()
+			new JTextFieldCustom[]{
+				this.audioEncodingDurationTimecode[0] = new JTextFieldCustom(),
+				this.audioEncodingDurationTimecode[1] = new JTextFieldCustom()
 			},
-			new ActionListener[]{
-				new ActionListener(){
+			new ChangeListener[]{
+				new ChangeListener() {
 					@Override
-					public final void actionPerformed(ActionEvent event) {
-						self.onAudioEncodeDurationTextModify(0, (JTextField) event.getSource());
+					public final void stateChanged(ChangeEvent event) {
+						self.onAudioEncodeDurationTextModify(0, (JTextFieldCustom) event.getSource());
 					}
 				},
-				new ActionListener(){
+				new ChangeListener() {
 					@Override
-					public final void actionPerformed(ActionEvent event) {
-						self.onAudioEncodeDurationTextModify(1, (JTextField) event.getSource());
-					}
-				}
-			},
-			new FocusListener[]{
-				new FocusListener(){
-					@Override
-					public final void focusGained(FocusEvent event) {
-					}
-					@Override
-					public final void focusLost(FocusEvent event) {
-						self.onAudioEncodeDurationTextModify(0, (JTextField) event.getSource());
-					}
-				},
-				new FocusListener(){
-					@Override
-					public final void focusGained(FocusEvent event) {
-					}
-					@Override
-					public final void focusLost(FocusEvent event) {
-						self.onAudioEncodeDurationTextModify(1, (JTextField) event.getSource());
+					public final void stateChanged(ChangeEvent event) {
+						self.onAudioEncodeDurationTextModify(1, (JTextFieldCustom) event.getSource());
 					}
 				}
 			}
@@ -2830,41 +2781,21 @@ public final class GUI extends JFrame {
 			container,
 			this.sync.rangeTimecodes[id][0] = new JLabel(Videncode.timeToString(0.0, new int[]{0,2,2,2})),
 			this.sync.rangeTimecodes[id][1] = new JLabel(),
-			new JTextField[]{
-				this.sync.rangeEncodeTimecodes[id][0] = new JTextField(),
-				this.sync.rangeEncodeTimecodes[id][1] = new JTextField()
+			new JTextFieldCustom[]{
+				this.sync.rangeEncodeTimecodes[id][0] = new JTextFieldCustom(),
+				this.sync.rangeEncodeTimecodes[id][1] = new JTextFieldCustom()
 			},
-			new ActionListener[]{
-				new ActionListener(){
+			new ChangeListener[]{
+				new ChangeListener() {
 					@Override
-					public final void actionPerformed(ActionEvent event) {
-						self.onSyncEncodeDurationTextModify(id, 0, (JTextField) event.getSource());
+					public final void stateChanged(ChangeEvent event) {
+						self.onSyncEncodeDurationTextModify(id, 0, (JTextFieldCustom) event.getSource());
 					}
 				},
-				new ActionListener(){
+				new ChangeListener() {
 					@Override
-					public final void actionPerformed(ActionEvent event) {
-						self.onSyncEncodeDurationTextModify(id, 1, (JTextField) event.getSource());
-					}
-				}
-			},
-			new FocusListener[]{
-				new FocusListener(){
-					@Override
-					public final void focusGained(FocusEvent event) {
-					}
-					@Override
-					public final void focusLost(FocusEvent event) {
-						self.onSyncEncodeDurationTextModify(id, 0, (JTextField) event.getSource());
-					}
-				},
-				new FocusListener(){
-					@Override
-					public final void focusGained(FocusEvent event) {
-					}
-					@Override
-					public final void focusLost(FocusEvent event) {
-						self.onSyncEncodeDurationTextModify(id, 1, (JTextField) event.getSource());
+					public final void stateChanged(ChangeEvent event) {
+						self.onSyncEncodeDurationTextModify(id, 1, (JTextFieldCustom) event.getSource());
 					}
 				}
 			}
@@ -3073,7 +3004,7 @@ public final class GUI extends JFrame {
 		gc.gridwidth = 1;
 		gc.anchor = GridBagConstraints.LINE_START;
 		gc.fill = GridBagConstraints.NONE;
-		gridCol.add(this.sync.videoState[1][Videncode.SYNC_LOOP] = new JRadioButton("Loop before audio starts playing"), gc);
+		gridCol.add(this.sync.videoState[1][Videncode.SYNC_LOOP] = new JRadioButton("Loop after audio starts playing"), gc);
 
 		++gc.gridy;
 		gc.anchor = GridBagConstraints.LINE_START;
@@ -3453,24 +3384,15 @@ public final class GUI extends JFrame {
 		++gc.gridx;
 		gc.weightx = 0.5;
 		gc.fill = GridBagConstraints.BOTH;
-		top.add(this.encode.outputFilename = new JTextField(), gc);
+		top.add(this.encode.outputFilename = new JTextFieldCustom(), gc);
 		this.encode.outputFilename.setFont(this.fonts.text);
 		this.encode.outputFilename.setForeground(this.colors.text);
 		this.encode.outputFilename.setOpaque(false);
 		this.encode.outputFilename.setBorder(BorderFactory.createLineBorder(this.colors.textLight1));
-		this.encode.outputFilename.addActionListener(new ActionListener(){
+		this.encode.outputFilename.addCustomChangeListener(new ChangeListener() {
 			@Override
-			public final void actionPerformed(ActionEvent event) {
-				self.onEncodeFileNameChange((JTextField) event.getSource());
-			}
-		});
-		this.encode.outputFilename.addFocusListener(new FocusListener(){
-			@Override
-			public final void focusGained(FocusEvent event) {
-			}
-			@Override
-			public final void focusLost(FocusEvent event) {
-				self.onEncodeFileNameChange((JTextField) event.getSource());
+			public final void stateChanged(ChangeEvent event) {
+				self.onEncodeFileNameChange((JTextFieldCustom) event.getSource());
 			}
 		});
 
@@ -3504,25 +3426,16 @@ public final class GUI extends JFrame {
 		gc.weightx = 0.5;
 		gc.gridwidth = 2;
 		gc.fill = GridBagConstraints.BOTH;
-		top.add(this.encode.outputTag = new JTextField(), gc);
+		top.add(this.encode.outputTag = new JTextFieldCustom(), gc);
 		this.encode.outputTag.setFont(this.fonts.text);
 		this.encode.outputTag.setForeground(this.colors.text);
 		this.encode.outputTag.setOpaque(false);
 		this.encode.outputTag.setBorder(BorderFactory.createLineBorder(this.colors.textLight1));
 		this.encode.outputTag.setDocument(new JTextFieldMaxLength(this.videncode.getOutputTagMaxLength()));
-		this.encode.outputTag.addActionListener(new ActionListener(){
+		this.encode.outputTag.addCustomChangeListener(new ChangeListener() {
 			@Override
-			public final void actionPerformed(ActionEvent event) {
-				self.onEncodeTagChange((JTextField) event.getSource());
-			}
-		});
-		this.encode.outputTag.addFocusListener(new FocusListener(){
-			@Override
-			public final void focusGained(FocusEvent event) {
-			}
-			@Override
-			public final void focusLost(FocusEvent event) {
-				self.onEncodeTagChange((JTextField) event.getSource());
+			public final void stateChanged(ChangeEvent event) {
+				self.onEncodeTagChange((JTextFieldCustom) event.getSource());
 			}
 		});
 		//}
@@ -3714,27 +3627,17 @@ public final class GUI extends JFrame {
 		c.weightx = 0.5;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.VERTICAL;
-		container.add(this.settings.outputMaxSize = new JTextField(), c);
+		container.add(this.settings.outputMaxSize = new JTextFieldCustom(), c);
 		this.settings.outputMaxSize.setPreferredSize(new Dimension(64, 1));
 		this.settings.outputMaxSize.setFont(this.fonts.text);
 		this.settings.outputMaxSize.setForeground(this.colors.text);
 		this.settings.outputMaxSize.setOpaque(false);
 		this.settings.outputMaxSize.setBorder(BorderFactory.createLineBorder(this.colors.textLight1));
 		this.settings.outputMaxSize.setText(Videncode.intToLabeledString(this.videncode.getOutputMaxFileSize(), 1024, new String[]{ "B" , "B" , "KB" , "MB" }));
-		this.settings.outputMaxSize.addActionListener(new ActionListener(){
+		this.settings.outputMaxSize.addCustomChangeListener(new ChangeListener() {
 			@Override
-			public final void actionPerformed(ActionEvent event) {
-				self.onOutputMaxSizeChange((JTextField) event.getSource());
-				self.enableSaveSettingsButton();
-			}
-		});
-		this.settings.outputMaxSize.addFocusListener(new FocusListener(){
-			@Override
-			public final void focusGained(FocusEvent event) {
-			}
-			@Override
-			public final void focusLost(FocusEvent event) {
-				self.onOutputMaxSizeChange((JTextField) event.getSource());
+			public final void stateChanged(ChangeEvent event) {
+				self.onOutputMaxSizeChange((JTextFieldCustom) event.getSource());
 				self.enableSaveSettingsButton();
 			}
 		});
@@ -4872,7 +4775,7 @@ public final class GUI extends JFrame {
 			}
 		}
 	}
-	private final void onVideoEncodeDurationTextModify(int id, JTextField obj) {
+	private final void onVideoEncodeDurationTextModify(int id, JTextFieldCustom obj) {
 		double[] value = new double[2];
 		value[0] = this.videoEncodingDurationRangeslider.getLow();
 		value[1] = this.videoEncodingDurationRangeslider.getHigh();
@@ -5298,7 +5201,7 @@ public final class GUI extends JFrame {
 			}
 		}
 	}
-	private final void onImageTimeTextModify(JTextField obj) {
+	private final void onImageTimeTextModify(JTextFieldCustom obj) {
 		if (this.imagePreviewTimecodeLocationModifying) return;
 
 		double value = this.imagePreviewTimeSlider.getPosition();
@@ -5647,7 +5550,7 @@ public final class GUI extends JFrame {
 			}
 		}
 	}
-	private final void onAudioEncodeDurationTextModify(int id, JTextField obj) {
+	private final void onAudioEncodeDurationTextModify(int id, JTextFieldCustom obj) {
 		if (this.isAudioLockedToVideo()) {
 			this.updateAudioIfLockedToVideo(false);
 		}
@@ -5775,8 +5678,8 @@ public final class GUI extends JFrame {
 		this.sync.audioFadeTransition[0].setSelected(this.videncode.getSyncAudioUseFade(true));
 		this.sync.audioFadeTransition[1].setSelected(this.videncode.getSyncAudioUseFade(false));
 
-		this.sync.optionPanels[0].setVisible(maxEncodeDurationId == 1);
-		this.sync.optionPanels[1].setVisible(maxEncodeDurationId == 0);
+		this.sync.optionPanels[0].setVisible(maxEncodeDurationId == 0);
+		this.sync.optionPanels[1].setVisible(maxEncodeDurationId == 1);
 	}
 
 	private final void onSyncEncodeDurationUpdate(int id, JRangeSlider.ChangeEvent event) {
@@ -5791,7 +5694,7 @@ public final class GUI extends JFrame {
 			}
 		}
 	}
-	private final void onSyncEncodeDurationTextModify(int id, int pos, JTextField obj) {
+	private final void onSyncEncodeDurationTextModify(int id, int pos, JTextFieldCustom obj) {
 		double[][] encodeTimes = new double[][]{ this.videncode.getVideoFileSourceEncodeDuration() , this.videncode.getAudioFileSourceEncodeDuration() };
 		double[] encodeDurations = new double[]{ (encodeTimes[0][1] - encodeTimes[0][0]) , (encodeTimes[1][1] - encodeTimes[1][0]) };
 		if (Videncode.withinThreshold(encodeDurations[0], encodeDurations[1]) || encodeDurations[id] > encodeDurations[1 - id]) return;
@@ -5890,10 +5793,10 @@ public final class GUI extends JFrame {
 		this.updateEncodeEncodingStatus();
 		this.updateEncodeButtonStatus();
 	}
-	private final void onEncodeFileNameChange(JTextField field) {
+	private final void onEncodeFileNameChange(JTextFieldCustom field) {
 		this.videncode.setOutputFilename(field.getText());
 	}
-	private final void onEncodeTagChange(JTextField field) {
+	private final void onEncodeTagChange(JTextFieldCustom field) {
 		this.videncode.setOutputTag(field.getText());
 
 		this.autoSelectVideoQuality(true);
@@ -5913,7 +5816,7 @@ public final class GUI extends JFrame {
 		}
 	}
 
-	private final void onOutputMaxSizeChange(JTextField field) {
+	private final void onOutputMaxSizeChange(JTextFieldCustom field) {
 		long d = Videncode.labeledStringToInt(field.getText(), 1024, new String[]{ "B" , "B" , "(KB|K)" , "(MB|M)" });
 		if (d <= 0) d = 1;
 		this.videncode.setOutputMaxFileSize(d);

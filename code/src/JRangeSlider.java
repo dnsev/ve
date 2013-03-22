@@ -443,12 +443,12 @@ public class JRangeSlider extends JComponent implements MouseListener, MouseMoti
 		return !this.disabled;
 	}
 
-    public void addChangeListener(ChangeListener l) {
-        this.listeners.add(ChangeListener.class, l);
-    }
-    public void removeChangeListener(ChangeListener l) {
-        this.listeners.remove(ChangeListener.class, l);
-    }
+	public void addChangeListener(ChangeListener l) {
+		this.listeners.add(ChangeListener.class, l);
+	}
+	public void removeChangeListener(ChangeListener l) {
+		this.listeners.remove(ChangeListener.class, l);
+	}
 	private void signalChange(int type) {
 		ChangeEvent changeEvent = new ChangeEvent(this, type);
 		Object[] objs = listeners.getListenerList();
