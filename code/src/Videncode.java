@@ -1511,7 +1511,7 @@ public final class Videncode extends ThreadManager {
 	private File outputFileLast = null;
 	private boolean outputIsMuxing = false;
 	private MuxGenerator outputGenerator = null;
-
+	private int outputAdditionalMuxSpace = 30000;
 
 	// Source data
 	private Integer videoFileSourceLock = new Integer(0);
@@ -3945,7 +3945,7 @@ public final class Videncode extends ThreadManager {
 			1 + (mux ? 1 : 0) + // flags1 + flags2
 			Videncode.getVarLenIntLength(tagLen, 5) + tagLen + // tag
 			5 + 5 // max for video/audio
-		) + (mux ? 28000 : 0); // additional space for muxing
+		) + (mux ? this.outputAdditionalMuxSpace : 0); // additional space for muxing
 	}
 	public final long getOutputMaxFileSize() {
 		long s;
@@ -4349,6 +4349,9 @@ public final class Videncode extends ThreadManager {
 
 		return sb.toString();
 	}
+	public static final String strAddComas(String str) {
+		return str.replaceAll("(\\d)(?=(\\d{3})+$)", "$1,");
+	}
 	public static final String numberToLabeledSize(double number, int minLenForCommas, int decimalLength, int cutoffRange, int divisionValue, final String[] suffixes) {
 		int i = 2;
 		String temp;
@@ -4373,24 +4376,22 @@ public final class Videncode extends ThreadManager {
 				}
 			}
 
-			// Get integer part
-			int d = (int) number;
-			if ((temp = Integer.valueOf(d).toString()).length() >= minLenForCommas && minLenForCommas >= 0) {
-				sb.append(Videncode.intAddComas(d));
-			}
-			else {
-				sb.append(temp);
-			}
-
-			// Get the decimal part
+			// Value
+			StringBuilder format = new StringBuilder();
+			format.append("0");
 			if (decimalLength > 0) {
-				number -= d;
-				StringBuilder format = new StringBuilder();
 				format.append('.');
 				for (int j = 0; j < decimalLength; ++j) format.append('#');
-				temp = (new DecimalFormat(format.toString()).format(number));
-				if (!temp.equals(".0")) sb.append(temp);
 			}
+			temp = (new DecimalFormat(format.toString()).format(number));
+			if (minLenForCommas >= 0) {
+				// Add commas
+				Matcher m = Pattern.compile("[0-9]{" + minLenForCommas + ",}").matcher(temp);
+				if (m.matches()) {
+					temp = strAddComas(m.group()) + temp.substring(m.group().length());
+				}
+			}
+			sb.append(temp);
 		}
 
 		// Done
@@ -4433,6 +4434,7 @@ public final class Videncode extends ThreadManager {
 
 		int t = (int) time;
 		int i, x, len, div = 3600;
+		time -= t;
 		StringBuilder sb = new StringBuilder();
 
 		// H:M:S
@@ -4442,7 +4444,19 @@ public final class Videncode extends ThreadManager {
 
 			if (x > 0 || len > 0 || (i == 2 && len >= 0 && sb.length() == 0)) {
 				if (x < 10 && len >= 2) sb.append('0'); // 0-padding
-				sb.append(x); // number
+				if (i == 2) {
+					// Seconds + decimal
+					StringBuilder format = new StringBuilder();
+					format.append("0");
+					if (tcLen[3] > 0) {
+						format.append('.');
+						for (int j = 0; j < tcLen[3]; ++j) format.append('#');
+					}
+					sb.append(new DecimalFormat(format.toString()).format(x + time));
+				}
+				else {
+					sb.append(x); // number
+				}
 				sb.append(delimiters == null || delimiters.length <= i ? Videncode.defaultTimecodeDelimiters[i] : delimiters[i]); // delimiter
 
 				// propagate
@@ -4456,16 +4470,6 @@ public final class Videncode extends ThreadManager {
 			}
 
 			div /= 60;
-		}
-
-		// Decimal seconds
-		if (tcLen[i] > 0) {
-			time -= (int) time;
-			StringBuilder format = new StringBuilder();
-			format.append('.');
-			for (int j = 0; j < tcLen[i]; ++j) format.append('#');
-			String temp = (new DecimalFormat(format.toString()).format(time));
-			if (!temp.equals(".0")) sb.append(temp);
 		}
 
 		return sb.toString();
