@@ -2,10 +2,10 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
-	<meta name="description" content="TODO" />
-	<meta name="keywords" content="TODO" />
+	<meta name="description" content="Image, video, and sound encoding." />
+	<meta name="keywords" content="videncode,videcode,ve,dnsev,image,gif,png,jpg,jpeg,webm,ogg,java,javascript,api,sound,video,audio" />
 	<meta name="author" content="dnsev" />
-	<link rel="shortcut icon" href="favicon.gif" />
+	<link rel="shortcut icon" href="favicon.png" />
 	<link rel="stylesheet" href="style.css" />
 	<title>dnsev / ve / Videncode</title>
 	<script src="jquery.js"></script>
@@ -14,8 +14,7 @@
 <body>
 
 <div class="TitleContainer">
-	<div class="TitleContainerInner"><a class="Title" href="">ve</a><div class="AuthorContainer"><a class="AuthorLink" href="https://github.com/dnsev">dnsev</a></div>
-	</div><div class="SubTitleSeparator">/</div><div class="TitleContainerInner"><div class="SubTitleContainer"><div class="SubTitle"><span class="SubTitleSegment">Vide</span><span class="SubTitleSegment">n</span><span class="SubTitleSegment">code</span></div><a class="Version" href="#changes"></a></div>
+	<div class="TitleContainerInner"><a class="Title" href="">ve</a><div class="AuthorContainer"><a class="AuthorLink" href="https://github.com/dnsev">dnsev</a></div></div><div class="SubTitleSeparator">/</div><div class="TitleContainerInner"><div class="SubTitleContainer"><div class="SubTitle"><span class="SubTitleSegment">Vi<span class="SubTitleEmphasis SubTitleEmphasisOff SubTitleEmphasisToggle">d</span><span class="SubTitleEmphasis">e</span></span><span class="SubTitleSegment SubTitleEmphasis">n</span><span class="SubTitleSegment SubTitleEmphasis">code</span></div><a class="Version" href="changelog.txt" target="_blank"></a></div>
 	<div class="SubTitleDescription"><a class="NavigationLink NavigationLinkCurrent" id="navigation_" href="#">main</a><div class="NavigationLinkSeparator">/</div><a class="NavigationLink NavigationLinkCurrent" id="navigation_use" href="#use">use</a><div class="NavigationLinkSeparator">/</div><a class="NavigationLink" id="navigation_api" href="#api">api</a><div class="NavigationLinkSeparator">/</div><a class="NavigationLink" id="navigation_about" href="#about">about</a><div class="NavigationLinkSeparator">/</div><a class="NavigationLink" id="navigation_github" href="https://github.com/dnsev/ve">github</a></div>
 	</div>
 </div>
@@ -23,38 +22,384 @@
 <div class="TitleBorder"></div>
 <div class="ContentContainer">
 	<div class="Content ContentWidth ContentActive" id="content_">
-		<div class="ContentHeader"><span class="ContentHeaderTitle">placeholder</span>:</div>
-		<div class="ContentBody">
-			placeholder
+		<div class="MainDescriptionContainer">
+		<div class="MainDescription">
+			<div class="MainDescriptionQuote MainDescriptionQuoteFirst">&#8220;</div><div class="MainDescriptionText">An application that takes video, audio, and an image<br />and combines them into one within a limited file size</div><div class="MainDescriptionQuote MainDescriptionQuoteLast">&#8221;</div>
 		</div>
+		</div>
+
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Installation</span>:</div>
+		<div class="ContentBody">
+			<ol start="0">
+				<li>
+					<p>Prerequisites: <a href="http://java.com/" target="_blank">Java</a> and a <a href="http://7-zip.org/" target="_blank"><span class="VAligned InlineCodeLink">.7z</span><span class="VAligned"> archive extractor</span></a>
+					</p>
+				</li>
+				<li>
+					<p>
+						Download these files into a new folder:
+					</p>
+					<ul class="ContentInstructionListUnordered">
+						<li class="HiddenHoverMaster"><a href="https://github.com/dnsev/ve/raw/master/app/Videncode.jar" target="_blank" class="InlineCodeLink VAligned">Videncode.jar</a><span class="VAligned HiddenHover">: <span class="InstallDescription">the application</span></span></li>
+						<li class="HiddenHoverMaster"><a href="http://ffmpeg.zeranoe.com/builds/win32/static/ffmpeg-latest-win32-static.7z" target="_blank" class="InlineCodeLink VAligned">ffmpeg.7z</a><span class="Asterisk">*</span><span class="VAligned HiddenHover">: <span class="InstallDescription">video encoding/decoding</span></span></li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<span class="VAligned">Open the </span><a href="http://ffmpeg.zeranoe.com/builds/win32/static/ffmpeg-latest-win32-static.7z" target="_blank" class="InlineCodeLink VAligned">ffmpeg.7z</a><span class="VAligned"> archive, navigate to </span><span class="VAligned InlineCode">/bin/</span><span class="VAligned">, extract both </span><a href="http://ffmpeg.org/ffmpeg.html" target="_blank" class="VAligned InlineCodeLink">ffmpeg.exe</a><span class="VAligned"> and </span><a href="http://ffmpeg.org/ffprobe.html" target="_blank" class="VAligned InlineCodeLink">ffprobe.exe</a><span class="VAligned"> into the folder</span>
+					</p>
+				</li>
+				<li>
+					<p>
+						<span class="VAligned">Run </span><a href="https://github.com/dnsev/ve/raw/master/app/Videncode.jar" target="_blank" class="InlineCodeLink VAligned">Videncode.jar</a>
+					</p>
+				</li>
+			</ol>
+			<p class="AsteriskMessage">
+				* If you aren't using Windows, or want a different version, check <a href="http://www.ffmpeg.org/download.html" target="_blank">here</a>.
+			</p>
+		</div>
+
+		<div class="PageVariableDisplayInv" pvar="advanced">
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Advanced</span>:</div>
+		<div class="ContentBody">
+			<p>
+				<span class="VAligned">You can also install the ffmpeg files into a directory and add the </span><span class="VAligned InlineCode">/bin/</span><span class="VAligned"> directory to your </span><span class="VAligned InlineCode">path</span><span class="VAligned"> environment variable rather than put the files directly with </span><span class="VAligned InlineCode">Videncode.jar</span><span class="VAligned">.</span>
+			</p>
+			<p>
+				<span class="VAligned">This way, </span><span class="VAligned InlineCode">Videncode.jar</span><span class="VAligned"> can run from any directory without error.</span>
+			</p>
+		</div>
+		</div>
+
+
+		<div class="ExtrasContainerPre PageVariableDisplay" pvar="advanced"></div>
+		<div class="ExtrasContainer PageVariableDisplay" pvar="advanced">
+			<div class="Extra">
+				<a href="#.?advanced" class="InternalLink">Advanced</a>
+			</div>
+		</div>
+
 	</div>
 
 	<div class="Content ContentWidth" id="content_use">
-		<div class="ContentHeader"><span class="ContentHeaderTitle">placeholder</span>:</div>
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Use</span>:</div>
 		<div class="ContentBody">
-			placeholder
+			<p>
+				placeholder
+			</p>
+		</div>
+
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Interface</span>:</div>
+		<div class="ContentBody">
+			<div class="UseImagePreviewOuter">
+				<a class="UseImagePreviewSmall ImageLink" target="_blank" href="preview.png" href_update="#use?activate=preview" multi_id="preview"></a><div class="ImageDescription">
+					Full preview of the GUI
+				</div>
+
+				<p class="AsteriskMessage">
+					Videncode comes with a simple tabbed interface:
+				</p>
+
+				<ul class="ContentInstructionListUnordered ContentInstructionListSmall">
+					<li>Image selection</li>
+					<li>Audio / video selection and cropping</li>
+					<li>Audio and video synchronization</li>
+					<li>Output and settings</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Image Tab</span>:</div>
+		<div class="ContentBody">
+			<p>
+				placeholder
+			</p>
+		</div>
+
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Video Tab</span>:</div>
+		<div class="ContentBody">
+			<p>
+				placeholder
+			</p>
+		</div>
+
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Sync Tab</span>:</div>
+		<div class="ContentBody">
+			<p>
+				placeholder
+			</p>
+		</div>
+
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Encode Tab</span>:</div>
+		<div class="ContentBody">
+			<p>
+				placeholder
+			</p>
+		</div>
+
+	</div>
+
+	<div class="Content ContentWidth" id="content_changes">
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Change log</span>:</div>
+		<div class="ContentBody" id="change_log" style="display: none;">
+			Change log could not be loaded.
 		</div>
 	</div>
 
 	<div class="Content ContentWidth" id="content_github">
-		<div class="ContentHeader"><span class="ContentHeaderTitle">placeholder</span>:</div>
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Github</span>:</div>
 		<div class="ContentBody">
-			placeholder
+			<p>If any bugs or problems are found with Videncode or the Javascript API, they can be reported on <a href="https://github.com/dnsev/ve/issues" target="_blank">this page</a>.</p>
+		</div>
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Source</span>:</div>
+		<div class="ContentBody">
+			<p>Videncode is written in Java and its source files are available <a href="https://github.com/dnsev/ve/tree/master/code" target="_blank">on Github</a>. It comes with a makefile if you want to compile and test for yourself.</p>
+			<p>The Javascript API source files are located under the <a href="https://github.com/dnsev/ve/tree/gh-pages" target="_blank">gh-pages</a> branch; a better description of what files are related to the API can be found on <a href="#api" class="InternalLink">the API page</a>.</p>
 		</div>
 	</div>
 
 	<div class="Content ContentWidth" id="content_about">
-		<div class="ContentHeader"><span class="ContentHeaderTitle">placeholder</span>:</div>
+		<div class="ContentHeader"><span class="ContentHeaderTitle">About</span>:</div>
 		<div class="ContentBody">
-			placeholder
+			<p>
+				<span class="VAligned">Videncode is a program designed to encode sound/video into an image file. The basic idea is "<i>like </i></span><span class="VAligned InlineCode"><i>.gif</i></span><span class="VAligned"><i>, but better</i>" and also with sound.</span>
+			</p>
+		</div>
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Content</span>:</div>
+		<div class="ContentBody">
+			<p>
+				Videncode creates a format that stores audio and/or video inside of an image. The image is used as a preview for the content.
+			</p>
+			<p>
+				<span class="VAligned">The typical file extension is </span><span class="VAligned InlineCode">.ve*</span><span class="VAligned">, where the * is replaced with the extension of the image file.</span>
+			</p>
+			<p>
+				<span class="VAligned">The video file type is </span><span class="VAligned InlineCode">.webm</span><span class="VAligned">; if the video is omitted, the file is an audio-only container.</span>
+			</p>
+			<p>
+				<span class="VAligned">The audio file type is </span><span class="VAligned InlineCode">.ogg</span><span class="VAligned"> Vorbis, either multiplexed into the video, or standalone.</span>
+			</p>
+		</div>
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Format</span>:</div>
+		<div class="ContentBody">
+			<p>
+			<div class="FormatVersion">v1</div>
+			<div class="FormatContainer">
+				<div class="FormatContainerBorder"></div>
+
+				<div class="FormatSection">
+					<div class="FormatSectionHeader">
+					<div class="FormatSectionSize"><span class="FormatSectionSizeSpecial">n</span> bytes</div>
+					<div class="FormatSectionLabel"><span class="VAligned FormatSectionLabelText">Image file</span></div>
+					<div class="FormatSectionHeaderClear"></div>
+					</div>
+
+					<div class="FormatSectionBody">
+						<span class="VAligned">The source image file; unmodified from the original image.<br />
+						In this case, </span><span class="VAligned FormatSectionSizeSpecial">n</span><span class="VAligned"> = the byte length of the image.</span>
+					</div>
+				</div>
+				<div class="FormatSection">
+					<div class="FormatSectionHeader">
+					<div class="FormatSectionSize">8 bytes</div>
+					<div class="FormatSectionLabel"><span class="VAligned FormatSectionLabelText">Signature</span></div>
+					<div class="FormatSectionHeaderClear"></div>
+					</div>
+
+					<div class="FormatSectionBody">
+						<span class="VAligned">The starting signature, </span><span class="VAligned FormatSectionCode">.</span><span class="VAligned FormatSectionCode">v</span><span class="VAligned FormatSectionCode">e</span><span class="VAligned FormatSectionCode">.</span><span class="VAligned FormatSectionCode">s</span><span class="VAligned FormatSectionCode">n</span><span class="VAligned FormatSectionCode">d</span><span class="VAligned FormatSectionCode">\x00</span><span class="VAligned">.</span>
+					</div>
+				</div>
+				<div class="FormatSection">
+					<div class="FormatSectionHeader">
+					<div class="FormatSectionSize">1 byte</div>
+					<div class="FormatSectionLabel"><span class="VAligned FormatSectionLabelText">Version</span></div>
+					<div class="FormatSectionHeaderClear"></div>
+					</div>
+
+					<div class="FormatSectionBody">
+						<span class="VAligned">The version of the file format.</span>
+					</div>
+				</div>
+				<div class="FormatSection">
+					<div class="FormatSectionHeader">
+					<div class="FormatSectionSize">1 byte</div>
+					<div class="FormatSectionLabel"><span class="VAligned FormatSectionLabelText">Flags 1</span></div>
+					<div class="FormatSectionHeaderClear"></div>
+					</div>
+
+					<div class="FormatSectionBody">
+						<div><span class="VAligned">Primary flags for the file:</span></div>
+						<div><span class="VAligned FormatSectionCode">\x01</span><span class="VAligned"> - has video</span></div>
+						<div><span class="VAligned FormatSectionCode">\x02</span><span class="VAligned"> - has audio</span></div>
+						<div><span class="VAligned FormatSectionCode">\x04</span><span class="VAligned"> - <i>reserved</i></span></div>
+						<div><span class="VAligned FormatSectionCode">\x08</span><span class="VAligned"> - <i>reserved</i></span></div>
+						<div><span class="VAligned FormatSectionCode">\x10</span><span class="VAligned"> - video fade in</span><span class="FormatSectionNote VAligned"><span class="FormatSectionNoteInner">a</span></span></div>
+						<div><span class="VAligned FormatSectionCode">\x20</span><span class="VAligned"> - video fade out</span><span class="FormatSectionNote VAligned"><span class="FormatSectionNoteInner">a</span></span></div>
+						<div><span class="VAligned FormatSectionCode">\x40</span><span class="VAligned"> - audio fade in</span><span class="FormatSectionNote VAligned"><span class="FormatSectionNoteInner">v</span></span></div>
+						<div><span class="VAligned FormatSectionCode">\x80</span><span class="VAligned"> - audio fade out</span><span class="FormatSectionNote VAligned"><span class="FormatSectionNoteInner">v</span></span></div>
+					</div>
+				</div>
+				<div class="FormatSection">
+					<div class="FormatSectionHeader">
+					<div class="FormatSectionSize">1 byte</div>
+					<div class="FormatSectionLabel"><span class="VAligned FormatSectionLabelText">Flags 2</span><span class="FormatSectionLabelOptional">conditional</span></div>
+					<div class="FormatSectionHeaderClear"></div>
+					</div>
+
+					<div class="FormatSectionBody">
+						<p>
+						<div><span class="VAligned">Secondary flags for the file:</span></div>
+						<div><span class="VAligned FormatSectionCode">\x01</span><span class="VAligned FormatSectionCode">\x02</span><span class="VAligned"> - video playback style, before audio</span><span class="FormatSectionNote VAligned"><span class="FormatSectionNoteInner">a</span></span></div>
+						<div><span class="VAligned FormatSectionCode">\x04</span><span class="VAligned FormatSectionCode">\x08</span><span class="VAligned"> - video playback style, after audio</span><span class="FormatSectionNote VAligned"><span class="FormatSectionNoteInner">a</span></span></div>
+						<div><span class="VAligned FormatSectionCode">\x10</span><span class="VAligned"> - audio playback style, before video</span><span class="FormatSectionNote VAligned"><span class="FormatSectionNoteInner">v</span></span></div>
+						<div><span class="VAligned FormatSectionCode">\x20</span><span class="VAligned"> - audio playback style, after video</span><span class="FormatSectionNote VAligned"><span class="FormatSectionNoteInner">v</span></span></div>
+						<div><span class="VAligned FormatSectionCode">\x40</span><span class="VAligned"> - <i>reserved</i></span></div>
+						<div><span class="VAligned FormatSectionCode">\x80</span><span class="VAligned"> - <i>reserved</i></span></div>
+						</p>
+
+						<p>
+							<div class="FormatSectionSubHeader">Video playback style:</div>
+							<div class="FormatSectionSubBody">
+								<div><span class="VAligned FormatSectionCode">\x00</span><span class="VAligned"> - Display nothing</span></div>
+								<div><span class="VAligned FormatSectionCode">\x01</span><span class="VAligned"> - Loop video</span></div>
+								<div><span class="VAligned FormatSectionCode">\x02</span><span class="VAligned"> - Display stopped video frame</span></div>
+								<div><span class="VAligned FormatSectionCode">\x03</span><span class="VAligned"> - Display image</span></div>
+								<div class="FormatSectionCondition"><span class="VAligned">(After right shifting to get into the appropriate </span><span class="VAligned FormatSectionCode">\x00</span><span class="VAligned"> to </span><span class="VAligned FormatSectionCode">\x03</span><span class="VAligned"> range)</span></div>
+							</div>
+						</p>
+						<p>
+							<div class="FormatSectionSubHeader">Audio playback style:</div>
+							<div class="FormatSectionSubBody">
+								<div><span class="VAligned FormatSectionCode">\x00</span><span class="VAligned"> - Play nothing</span></div>
+								<div><span class="VAligned FormatSectionCode">\x01</span><span class="VAligned"> - Loop audio</span></div>
+								<div class="FormatSectionCondition"><span class="VAligned">(After right shifting to get into the appropriate </span><span class="VAligned FormatSectionCode">\x00</span><span class="VAligned"> to </span><span class="VAligned FormatSectionCode">\x01</span><span class="VAligned"> range)</span></div>
+							</div>
+						</p>
+
+						<p class="FormatSectionCondition"><span class="VAligned">Condition: flags1 has </span><span class="VAligned FormatSectionCode">\x01</span><span class="VAligned"> and </span><span class="VAligned FormatSectionCode">\x02</span><span class="VAligned"> set</span></p>
+					</div>
+				</div>
+				<div class="FormatSection">
+					<div class="FormatSectionHeader">
+					<div class="FormatSectionSize"><span class="FormatSectionSizeSpecial">v</span> bytes</div>
+					<div class="FormatSectionLabel"><span class="VAligned FormatSectionLabelText">Tag length</span></div>
+					<div class="FormatSectionHeaderClear"></div>
+					</div>
+
+					<div class="FormatSectionBody">
+						<span class="VAligned">The length of the tag in bytes.</span>
+					</div>
+				</div>
+				<div class="FormatSection">
+					<div class="FormatSectionHeader">
+					<div class="FormatSectionSize"><span class="FormatSectionSizeSpecial">n</span> bytes</div>
+					<div class="FormatSectionLabel"><span class="VAligned FormatSectionLabelText">Tag</span></div>
+					<div class="FormatSectionHeaderClear"></div>
+					</div>
+
+					<div class="FormatSectionBody">
+						<span class="VAligned">The tag for the file, encoded in UTF-8.<br />
+						In this case, </span><span class="VAligned FormatSectionSizeSpecial">n</span><span class="VAligned"> = the length of the tag as found from the previous section.</span>
+					</div>
+				</div>
+				<div class="FormatSection">
+					<div class="FormatSectionHeader">
+					<div class="FormatSectionSize"><span class="FormatSectionSizeSpecial">v</span> + 2 bytes</div>
+					<div class="FormatSectionLabel"><span class="VAligned FormatSectionLabelText">Synchronization offset</span><span class="FormatSectionLabelOptional">conditional</span></div>
+					<div class="FormatSectionHeaderClear"></div>
+					</div>
+
+					<div class="FormatSectionBody">
+						<p><span class="VAligned">The synchronization offset of the video and audio data, in seconds.<br />In this case, the </span><span class="VAligned FormatSectionSizeSpecial">v</span><span class="VAligned"> encodes the integer part of the number, and the extra 2 bytes encode the decimal portion, as a fixed point number.</span>
+						</p>
+
+						<p class="FormatSectionCondition"><span class="VAligned">Condition: flags1 has </span><span class="VAligned FormatSectionCode">\x01</span><span class="VAligned"> and </span><span class="VAligned FormatSectionCode">\x02</span><span class="VAligned"> set</span></p>
+					</div>
+				</div>
+				<div class="FormatSection">
+					<div class="FormatSectionHeader">
+					<div class="FormatSectionSize"><span class="FormatSectionSizeSpecial">v</span> + <span class="FormatSectionSizeSpecial">n</span> bytes</div>
+					<div class="FormatSectionLabel"><span class="VAligned FormatSectionLabelText">Video</span><span class="FormatSectionLabelOptional">conditional</span></div>
+					<div class="FormatSectionHeaderClear"></div>
+					</div>
+
+					<div class="FormatSectionBody">
+						<p><span class="VAligned">This section includes the byte length of the video using </span><span class="VAligned FormatSectionSizeSpecial">v</span><span class="VAligned"> bytes, and the video itself encoded using </span><span class="VAligned FormatSectionSizeSpecial">n</span><span class="VAligned"> bytes.</span></p>
+						<p class="FormatSectionCondition"><span class="VAligned">Condition: flags1 has </span><span class="VAligned FormatSectionCode">\x01</span><span class="VAligned"> set</span></p>
+					</div>
+				</div>
+				<div class="FormatSection">
+					<div class="FormatSectionHeader">
+					<div class="FormatSectionSize"><span class="FormatSectionSizeSpecial">v</span> + <span class="FormatSectionSizeSpecial">n</span> bytes</div>
+					<div class="FormatSectionLabel"><span class="VAligned FormatSectionLabelText">Audio</span><span class="FormatSectionLabelOptional">conditional</span></div>
+					<div class="FormatSectionHeaderClear"></div>
+					</div>
+
+					<div class="FormatSectionBody">
+						<p><span class="VAligned">This section includes the byte length of the audio using </span><span class="VAligned FormatSectionSizeSpecial">v</span><span class="VAligned"> bytes, and the audio itself encoded using </span><span class="VAligned FormatSectionSizeSpecial">n</span><span class="VAligned"> bytes.</span></p>
+						<p class="FormatSectionCondition"><span class="VAligned">Condition: flags1 has </span><span class="VAligned FormatSectionCode">\x02</span><span class="VAligned"> set</span></p>
+					</div>
+				</div>
+			</div>
+			</p>
+
+			<p>
+				<div class="FormatDescriptionText">Sections marked "conditional" won't appear unless a certain condition is met.</div>
+			</p>
+			<p>
+				<div class="FormatDescriptionText">Flags with a superscripted letter are only relevant if there are separate video and audio tracks.</div>
+			</p>
+			<p>
+				<div class="FormatDescriptionText">Furthermode, Flags subscripted with "a" are only relevant if the audio is the main track, and similarly, flags subscripted with "v" are only relevant if the video is the main track.</div>
+			</p>
+		</div>
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Motivation</span>:</div>
+		<div class="ContentBody">
+			<p>
+				<span class="VAligned">VP8 can encode much more efficiently than </span><span class="VAligned InlineCode">.gif</span><span class="VAligned"> images, allowing longer files, larger resolutions, more colors, and potentially audio.</span>
+			</p>
+			<p>
+				<span class="VAligned">The aim of </span><span class="VAligned InlineCode">.ve*</span><span class="VAligned"> images is to basically have higher quality </span><span class="VAligned InlineCode">.gif</span><span class="VAligned">-style functionality with a few extra features.</span>
+			</p>
 		</div>
 	</div>
 
 	<div class="Content ContentWidth" id="content_api">
 		<div class="ContentHeader"><span class="ContentHeaderTitle">API</span>:</div>
 		<div class="ContentBody">
-			placeholder
+			<p>There is currently an encoding, decoding, and playback API written for HTML5 using Javascript.</p>
 		</div>
+		<div class="ContentHeader"><span class="ContentHeaderTitle">API Testing</span>:</div>
+		<div class="ContentBody">
+			<p>You can test the API on <a class="InternalLink" href="#api/test">this page</a>; the test includes encoding, decoding, and playback.</p>
+			<p>You can test files you've created to make sure they work to your liking.</p>
+		</div>
+		<div class="ContentHeader"><span class="ContentHeaderTitle">API Files</span>:</div>
+		<div class="ContentBody">
+		<ul>
+			<li>
+				<div><span class="VAligned InlineCode">ve_api.js</span><span class="VAligned"> - <a href="https://github.com/dnsev/ve/blob/gh-pages/ve_api.js" target="_blank">github</a> / <a href="https://raw.github.com/dnsev/ve/gh-pages/ve_api.js" target="_blank">raw</a></span></div>
+				<div class="DownloadLinkExtension AsteriskMessage">The main API file</div>
+			</li>
+			<li>
+				<span class="VAligned InlineCode">api_test.js</span><span class="VAligned"> - <a href="https://github.com/dnsev/ve/blob/gh-pages/api_test.js" target="_blank">github</a> / <a href="https://raw.github.com/dnsev/ve/gh-pages/api_test.js" target="_blank">raw</a></span>
+				<div class="DownloadLinkExtension AsteriskMessage">The demonstration file used on the test page; also uses jquery.js</div>
+			</li>
+			<li>
+				<span class="VAligned InlineCode">api_test.css</span><span class="VAligned"> - <a href="https://github.com/dnsev/ve/blob/gh-pages/api_test.css" target="_blank">github</a> / <a href="https://raw.github.com/dnsev/ve/gh-pages/api_test.css" target="_blank">raw</a></span>
+				<div class="DownloadLinkExtension AsteriskMessage">The stylesheet used on the test page</div>
+			</li>
+		</ul>
+		</div>
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Other</span>:</div>
+		<div class="ContentBody">
+			<p>
+				<span class="VAligned">The main API file, </span><span class="VAligned InlineCode">ve_api.js</span><span class="VAligned">, is documented in the file itself. Reading the comments and/or looking at the test code should explain how it's used.</span>
+			</p>
+		</div>
+
 	</div>
 
 	<div class="Content ContentWidth" id="content_api_test">

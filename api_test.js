@@ -640,9 +640,6 @@
 					video_container.css("padding-top", ((h - vid_height) / 2.0) + "px");
 				}
 
-				retag_video_main_container.css("display", vplayer.is_video_main() ? "" : "none");
-				retag_audio_main_container.css("display", vplayer.is_video_main() ? "none" : "");
-
 				// Status
 				video_status_label.html("loaded");
 				video_seek_label.html("0");

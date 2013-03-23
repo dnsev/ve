@@ -202,6 +202,14 @@ a.Title, a.Title:visited, a.Title:hover, a.Title:active {
 .SubTitleSegment.SubTitleSegmentHidden {
 	display: none !important;
 }
+.SubTitleEmphasis {
+	color: #c28ee1;
+}
+.SubTitleEmphasis.SubTitleEmphasisOff {
+	color: #b872e1;
+}
+.SubTitleEmphasisToggle {
+}
 .SubTitleDescription {
 	display: block;
 	position: absolute;
@@ -440,7 +448,7 @@ a.InstallLink:active {
 }
 
 .DownloadLinkExtension {
-	color: #b872e1;
+	color: #a44fd6;
 }
 
 .Asterisk {
@@ -450,7 +458,7 @@ a.InstallLink:active {
 	vertical-align: top;
 }
 .AsteriskMessage {
-	font-size: 14px;
+	font-size: 16px;
 }
 
 .InstructionsImageLink {
@@ -472,4 +480,180 @@ a.InstallLink:active {
 	text-align: center;
 	margin: 20px 0px 20px 0px;
 	display: block;
+}
+
+.VAligned {
+	vertical-align: bottom;
+}
+.InlineCode {
+	font-family: Courier New;
+}
+.InlineCodeLink, a.InlineCodeLink, a.InlineCodeLink:link, a.InlineCodeLink:visited, a.InlineCodeLink:hover, a.InlineCodeLink:active {
+	color: #400363;
+	font-family: Courier New;
+}
+
+.FormatVersion {
+	font-size: 14px;
+	color: #a44fd6;
+}
+.FormatContainer {
+	background: #debdf1;
+	font-size: 16px;
+	position: relative;
+}
+.FormatContainerBorder {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	border: 1px solid #7b1cb1;
+}
+.FormatSection {
+	padding: 4px;
+	position: relative;
+	border-bottom: 1px solid #7b1cb1;
+}
+.FormatSectionHeader {
+}
+.FormatSectionLabel {
+	vertical-align: middle;
+}
+.FormatSectionLabelText {
+	font-weight: bold;
+}
+.FormatSectionLabelOptional {
+	vertical-align: middle;
+	display: inline-block;
+	padding-left: 8px;
+	color: #7b1cb1;
+}
+.FormatSectionSize {
+	float: right;
+	vertical-align: middle;
+	font-family: Courier New;
+}
+.FormatSectionSizeSpecial {
+	font-style: italic;
+	font-family: Courier New;
+}
+.FormatSectionCondition {
+	color: #7b1cb1;
+}
+.FormatSectionCode {
+	font-family: Courier New;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #ba77e1;
+	background: rgba(255,255,255,0.125);
+}
+.FormatSectionCode + .FormatSectionCode {
+	font-family: Courier New;
+	border: 1px solid #ba77e1;
+	background: rgba(255,255,255,0.125);
+	margin-left: 1px;
+}
+.FormatSectionHeaderClear {
+	clear: both;
+}
+.FormatSectionBody {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 100%;
+	background: #debdf1;
+	z-index: 1;
+	border-left: 1px solid #7b1cb1;
+	border-right: 1px solid #7b1cb1;
+	border-bottom: 1px solid #7b1cb1;
+	padding: 0px 4px 4px 4px;
+	overflow: hidden;
+}
+.FormatSection:hover > .FormatSectionBody, .FormatSectionBody.hover {
+	opacity: 1.0;
+	display: block;
+	visibility: visible;
+
+	transition: opacity 0.25s ease-in-out 0.5s, visibility 0s linear 0.5s;
+	-moz-transition: opacity 0.25s ease-in-out 0.5s, visibility 0s linear 0.5s;
+	-webkit-transition: opacity 0.25s ease-in-out 0.5s, visibility 0s linear 0.5s;
+}
+.FormatSection:not(:hover) > .FormatSectionBody {
+	opacity: 0.0;
+	display: block;
+	visibility: hidden;
+
+	transition: opacity 0.25s ease-in-out 0s, visibility 0s linear 0.25s;
+	-moz-transition: opacity 0.25s ease-in-out 0s, visibility 0s linear 0.25s;
+	-webkit-transition: opacity 0.25s ease-in-out 0s, visibility 0s linear 0.25s;
+}
+.FormatSectionNote {
+	position: relative;
+}
+.FormatSectionNoteInner {
+	position: absolute;
+	left: 3px;
+	top: -2px;
+	font-size: 0.75em;
+	white-space: nowrap;
+}
+.FormatDescriptionText {
+	font-size: 16px;
+}
+.FormatSectionSubHeader{
+
+}
+.FormatSectionSubBody {
+	margin-left: 8px;
+}
+
+.InstallDescription  {
+	color: #a44fd6;
+}
+
+.MainDescriptionContainer {
+	display: block;
+	text-align: center;
+}
+.MainDescription {
+	display: inline-block;
+	text-align: left;
+	margin: 32px 0px 32px 0px;
+	padding: 0px 20px 0px 20px;
+	position: relative;
+}
+.MainDescriptionText {
+	font-style: italic;
+	display: inline-block;
+}
+.MainDescriptionQuote {
+	font-family: Times New Roman;
+	font-weight: bold;
+	font-size: 32px;
+	position: absolute;
+	opacity: 0.5;
+}
+.MainDescriptionQuoteFirst {
+	left: 0px;
+	top: -6px;
+}
+.MainDescriptionQuoteLast {
+	right: 0px;
+	bottom: -0.5em;
+}
+
+.UseImagePreviewOuter {
+	position: relative;
+	padding-left: 328px;
+	min-height: 173px;
+}
+.UseImagePreviewSmall {
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: inline-block;
+	width: 320px;
+	height: 173px;
+	background: 0px 0px transparent url(preview_small.png) no-repeat;
 }

@@ -530,13 +530,52 @@ $(document).ready(function () {
 		}
 		return true;
 	});
-	$($(".SubTitleSegment")[1]).addClass("SubTitleSegmentClickable").on("click", {}, function (event) {
-		$(this)
-		.addClass("SubTitleSegmentHidable")
-		.animate({"width": "0px"}, {duration: 400, done: function () {
-			$(this).addClass("SubTitleSegmentHidden");
-		}});
-		return false;
+	$(".SubTitle").on("click", {}, function (event) {
+		if (event.which == 1 || event.which === undefined) {
+			var elem = $($(".SubTitleSegment")[1]);
+
+			if ($(".SubTitleEmphasisToggle.SubTitleEmphasisOff").length > 0) {
+				elem
+				.addClass("SubTitleSegmentHidable")
+				.stop(true)
+				.animate({"opacity": "0"}, {duration: 200, done: function () {
+					$(this).css("opacity", "0");
+				}})
+				.animate({"width": "0px"}, {duration: 300, done: function () {
+					$(this).addClass("SubTitleSegmentHidden");
+					$(".SubTitleEmphasisToggle").removeClass("SubTitleEmphasisOff");
+				}});
+			}
+			else {
+				elem.removeClass("SubTitleSegmentHidden SubTitleSegmentHidable").css("width", "auto");
+				width = elem.width();
+				elem.addClass("SubTitleSegmentHidable").css("width", "0px");
+
+				elem
+				.stop(true)
+				.animate({"width": width}, {duration: 300, done: function () {
+					$(this).removeClass("SubTitleSegmentHidable").css("width", "");
+				}})
+				.animate({"opacity": "1"}, {duration: 200, done: function () {
+					$(this).css("opacity", "");
+					$(".SubTitleEmphasisToggle").addClass("SubTitleEmphasisOff");
+				}});
+			}
+			return false;
+		}
+		return true;
+	});
+	$(".Version").on("click", {}, function (event) {
+		if ((event.which == 1 || event.which === undefined)) {
+			var href = ("#changes").substr(1).split("?");
+			window_hash.goto_page(
+				window_hash.modify_href(href[0]),
+				maintain_vars(window_hash.vars, []),
+				(href[1] ? window_hash.parse_vars(href[1]) : undefined)
+			);
+			return false;
+		}
+		return true;
 	});
 
 	// Change log

@@ -1307,6 +1307,15 @@ var VPlayer = (function () {
 			create_animation({ "opacity": "0.0" })
 		];
 	}
+	function get_computed_style(elem) {
+		/**
+			Get the computed style of an object.
+
+			@return
+				the computed style
+		*/
+		return window.getComputedStyle(elem, null);
+	}
 
 	// Variables
 	var css_animation_prefix = "VeAPIVPlayerAnimation";
@@ -1968,11 +1977,11 @@ var VPlayer = (function () {
 		*/
 		video_animate_stop: function () {
 			if (has_class(this.video_tag.className, css_video_opacity_animations[0])) {
-				this.video_tag.style.opacity = window.getComputedStyle(this.video_tag).opacity;
+				this.video_tag.style.opacity = get_computed_style(this.video_tag).opacity;
 				this.video_tag.className = remove_class(this.video_tag.className, css_video_opacity_animations[0]);
 			}
 			else if (has_class(this.video_tag.className, css_video_opacity_animations[1])) {
-				this.video_tag.style.opacity = window.getComputedStyle(this.video_tag).opacity;
+				this.video_tag.style.opacity = get_computed_style(this.video_tag).opacity;
 				this.video_tag.className = remove_class(this.video_tag.className, css_video_opacity_animations[1]);
 			}
 			clear_animation_time(this.video_tag);
