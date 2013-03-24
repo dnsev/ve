@@ -727,6 +727,7 @@ var Videcode = (function () {
 			// Set
 			if (this.error_message === null) {
 				this.error_message = message;
+				this.malformed = true;
 			}
 
 			return this;
@@ -749,6 +750,7 @@ var Videcode = (function () {
 			// Decoding data
 			this.version = 0;
 
+			this.malformed = false;
 			this.error_message = null;
 			this.status = 0;
 			this.mask = 0x12;
@@ -940,6 +942,7 @@ var Videcode = (function () {
 			}
 			else {
 				this_private.set_error.call(this, "No data found");
+				this.malformed = false;
 			}
 
 			// Error
@@ -972,6 +975,17 @@ var Videcode = (function () {
 		*/
 		has_error: function () {
 			return (this.error_message !== null || this.image === null);
+		},
+
+		/**
+			Check if the decoded data was malformed.
+
+			@return
+				true if not decoded or not malformed,
+				false if an error occured that wasn't "no data found"
+		*/
+		is_malformed: function () {
+			return this.malformed;
 		},
 
 		/**
