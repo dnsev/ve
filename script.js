@@ -11,6 +11,11 @@ var page_list = {
 	},
 };
 var page_list_first_open_callback = {
+	"use": function () {
+		$(".UseImagePreviewSmall").each(function () {
+			$(this).css("background-image", "url(" + ($(this).attr("preview_href")) + ")");
+		});
+	},
 	"api": {
 		"test": function () {
 			launch_api();
@@ -388,7 +393,9 @@ function image_preview(obj) {
 				.addClass("ImagePreviewImageContainer")
 				.attr("href", obj.attr("href"))
 				.attr("target", "_blank")
-				.on("click", function () { return true; })
+				.on("click", function (event) {
+					return false;
+				})
 			)
 			.append(
 				(descr_container = $(document.createElement("div")))
@@ -398,8 +405,6 @@ function image_preview(obj) {
 		)
 		.on("click", {}, function (event) {
 			if (event.which == 1) {
-				event.preventDefault();
-				event.stopPropagation();
 				return false;
 			}
 			return true;
@@ -429,7 +434,12 @@ function image_preview(obj) {
 		.on("load", {}, function (event) {
 			// Image loaded; open
 			descr_container.css({
-				"width": descr_container.outerWidth(),
+				"max-width": Math.max(640, this.width) + "px"
+			});
+			var w = descr_container.outerWidth();
+			descr_container.css({
+				"width": w,
+				"max-width": ""
 			});
 			offset.css({
 				"left": (-offset.outerWidth() / 2) + "px",

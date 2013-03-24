@@ -285,12 +285,18 @@ a.Version, a.Version:visited, a.Version:hover, a.Version:active {
 .ContentHeader {
 	color: #28013f;
 }
+.ContentHeader.ContentHeaderRight {
+	text-align: right;
+}
 .ContentHeaderTitle {
 	font-weight: bold;
 }
 .ContentBody {
 	color: #400363;
 	padding: 16px 0px 16px 16px;
+}
+.ContentBody.ContentBodyRight {
+	padding: 16px 16px 16px 0px;
 }
 .ContentBodyStub {
 	padding: 16px 0px 0px 16px;
@@ -429,7 +435,6 @@ a.InstallLink:active {
 .ImagePreviewDescriptionContainer {
 	display: block;
 	text-align: left;
-	max-width: 640px;
 }
 
 .ImageLink {
@@ -646,7 +651,14 @@ a.InstallLink:active {
 .UseImagePreviewOuter {
 	position: relative;
 	padding-left: 328px;
-	min-height: 173px;
+	min-height: 139px;
+}
+.UseImagePreviewOuter.UseImagePreviewOuterFinal {
+	min-height: 243px;
+}
+.UseImagePreviewOuter.UseImagePreviewOuterRight {
+	padding-left: 0px;
+	padding-right: 328px;
 }
 .UseImagePreviewSmall {
 	position: absolute;
@@ -654,6 +666,17 @@ a.InstallLink:active {
 	top: 0;
 	display: inline-block;
 	width: 320px;
-	height: 173px;
-	background: 0px 0px transparent url(preview_small.png) no-repeat;
+	height: 139px;
+	background-position: 0px 0px;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-size: 320px 139px;
+}
+.UseImagePreviewSmall.UseImagePreviewSmallRight {
+	left: auto;
+	right: 0;
+}
+.UseImagePreviewSmall.UseImagePreviewSmallFinal {
+	height: 243px;
+	background-size: 320px 243px;
 }

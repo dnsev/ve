@@ -183,3 +183,5 @@ code/bin/com
 code/extra
 !code/bin/
 !code/bin/res/*.png
+
+!/*.png

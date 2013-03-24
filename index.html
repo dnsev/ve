@@ -86,14 +86,53 @@
 		<div class="ContentHeader"><span class="ContentHeaderTitle">Use</span>:</div>
 		<div class="ContentBody">
 			<p>
-				placeholder
+				<span>Videncode can be used to make images that act like </span><span class="VAligned InlineCode">.gif</span><span class="VAligned">, but with more features and more quality.</span>
+			</p>
+			<p>
+				It requires <a href="http://java.com/" target="_blank">Java</a> and <a href="http://www.ffmpeg.org/" target="_blank">FFmpeg</a> to run.
+			</p>
+		</div>
+
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Separate Video and Audio</span>:</div>
+		<div class="ContentBody">
+			<p>
+				Video and audio tracks can be completely separate from eachother, both in terms of quality and length.
+			</p>
+			<p>
+				If they are different lengths, you can choose how they will sync up with eachother during playback.
+			</p>
+		</div>
+
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Auto Quality</span>:</div>
+		<div class="ContentBody">
+			<p>
+				The automatic quality detection will try to select the best resolution for you based on the available space.
+			</p>
+			<p>
+				Different modes allow different levels of quality depending on the available bitrate.
+			</p>
+			<p>
+				Note that in the end, the encoder may need to use a certain minimum quality, and your file size limit may be ignored.
+			</p>
+		</div>
+
+		<div class="ContentHeader"><span class="ContentHeaderTitle">File Size</span>:</div>
+		<div class="ContentBody">
+			<p>
+				Getting the file size perfectly within the bounds hasn't proved to be an exact art.
+			</p>
+			<p>
+				Thus, if an output winds up being slightly over your file size limit, try decreasing the limit by a small amount.
+			</p>
+			<p>
+				That failing, decrease your output quality.
 			</p>
 		</div>
 
 		<div class="ContentHeader"><span class="ContentHeaderTitle">Interface</span>:</div>
 		<div class="ContentBody">
 			<div class="UseImagePreviewOuter">
-				<a class="UseImagePreviewSmall ImageLink" target="_blank" href="preview.png" href_update="#use?activate=preview" multi_id="preview"></a><div class="ImageDescription">
+				<a class="UseImagePreviewSmall ImageLink" target="_blank" href="preview0.png" href_update="#use?activate=preview0" multi_id="preview0" preview_href="preview0_small.png"></a><div class="ImageDescription">
 					Full preview of the GUI
 				</div>
 
@@ -110,32 +149,110 @@
 			</div>
 		</div>
 
-		<div class="ContentHeader"><span class="ContentHeaderTitle">Image Tab</span>:</div>
-		<div class="ContentBody">
-			<p>
-				placeholder
-			</p>
+		<div class="ContentHeader ContentHeaderRight"><span class="ContentHeaderTitle">Image Tab</span></div>
+		<div class="ContentBody ContentBodyRight">
+			<div class="UseImagePreviewOuter UseImagePreviewOuterRight">
+				<a class="UseImagePreviewSmall UseImagePreviewSmallRight ImageLink" target="_blank" href="preview1.png" href_update="#use?activate=preview1" multi_id="preview1" preview_href="preview1_small.png"></a><div class="ImageDescription">
+					<ul>
+						<li>The preview image for the file; the bar at the bottom selects the time from the video</li>
+						<li>The quality can also be changed; in the case of an external image, the quality can be set to "Original," which means use the original image unchanged</li>
+					</ul>
+				</div>
+
+				<p class="AsteriskMessage">
+					The image tab lets you select the source of the preview image.
+				</p>
+				<p class="AsteriskMessage">
+					It can come from a frame of the video, or a separate external image.
+				</p>
+				<p class="AsteriskMessage">
+					Quality and size selections are available.
+				</p>
+			</div>
 		</div>
 
-		<div class="ContentHeader"><span class="ContentHeaderTitle">Video Tab</span>:</div>
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Video Tab</span></div>
 		<div class="ContentBody">
-			<p>
-				placeholder
-			</p>
+			<div class="UseImagePreviewOuter">
+				<a class="UseImagePreviewSmall ImageLink" target="_blank" href="preview2.png" href_update="#use?activate=preview2" multi_id="preview2" preview_href="preview2_small.png"></a><div class="ImageDescription">
+					<ul>
+						<li>Video settings appear on the left, audio on the right</li>
+						<li>Previews of the start/end frames of the video are available</li>
+						<li>Additionally, 5 second previews of the audio start/end positions are available</li>
+					</ul>
+				</div>
+
+				<p class="AsteriskMessage">
+					The video tab lets you select the video and audio sources and encoding times.
+				</p>
+				<p class="AsteriskMessage">
+					You can also select the encoding settings related to the audio and video.
+				</p>
+			</div>
 		</div>
 
-		<div class="ContentHeader"><span class="ContentHeaderTitle">Sync Tab</span>:</div>
-		<div class="ContentBody">
-			<p>
-				placeholder
-			</p>
+		<div class="ContentHeader ContentHeaderRight"><span class="ContentHeaderTitle">Sync Tab</span></div>
+		<div class="ContentBody ContentBodyRight">
+			<div class="UseImagePreviewOuter UseImagePreviewOuterRight">
+				<a class="UseImagePreviewSmall UseImagePreviewSmallRight ImageLink" target="_blank" href="preview3.png" href_update="#use?activate=preview3" multi_id="preview3" preview_href="preview3_small.png"></a><div class="ImageDescription">
+					<ul>
+						<li>Video/audio synchronization times. The smaller of the two bars can be dragged to select the starting time</li>
+						<li>There are also some additional settings at the bottom related to the shorter of the two tracks</li>
+					</ul>
+				</div>
+
+				<p class="AsteriskMessage">
+					The sync tab displays the encoding times of the video and audio.
+				</p>
+				<p class="AsteriskMessage">
+					If the audio and video are from the same source, this panel doesn't need to be used.
+				</p>
+			</div>
 		</div>
 
-		<div class="ContentHeader"><span class="ContentHeaderTitle">Encode Tab</span>:</div>
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Encode Tab</span></div>
 		<div class="ContentBody">
-			<p>
-				placeholder
-			</p>
+			<div class="UseImagePreviewOuter">
+				<a class="UseImagePreviewSmall ImageLink" target="_blank" href="preview4.png" href_update="#use?activate=preview4" multi_id="preview4" preview_href="preview4_small.png"></a><div class="ImageDescription">
+					<ul>
+						<li>Videncode is currently encoding, and thus the button says "Cancel" rather than "Encode"</li>
+						<li>6 status logs also appear on the left. They can be safely ignored most of the times, as they are mainly for debugging</li>
+						<li>Application settings are located on the right, and can be saved to be used on subsequent runs</li>
+					</ul>
+				</div>
+
+				<p class="AsteriskMessage">
+					The encod tab provides the file name editor, tag editor, and a button to encode.
+				</p>
+				<p class="AsteriskMessage">
+					For advanced testing, FFmpeg logs appear on the bottom left.
+				</p>
+				<p class="AsteriskMessage">
+					Application settings are on the right.
+				</p>
+			</div>
+		</div>
+
+		<div class="ContentHeader ContentHeaderRight"><span class="ContentHeaderTitle">Output</span></div>
+		<div class="ContentBody ContentBodyRight">
+			<div class="UseImagePreviewOuter UseImagePreviewOuterFinal UseImagePreviewOuterRight">
+				<a class="UseImagePreviewSmall UseImagePreviewSmallFinal UseImagePreviewSmallRight ImageLink" target="_blank" href="output.png" href_update="#use?activate=output" multi_id="output" preview_href="output.png"></a><div class="ImageDescription">
+					<ul>
+						<li>3:54.2 of audio and video encoded in under 3 MB</li>
+						<li>The output file size limit did have to be adjusted to be slightly smaller, or it would produce a ~3.01 MB file</li>
+					</ul>
+				</div>
+
+				<p class="AsteriskMessage">
+					And like magic, after the encoding process is done, a 4 minute long video with audio has been encoded in under 3 MB.
+				</p>
+				<p class="AsteriskMessage">
+					The quality is recognizable, but less than desirable. The reason for this is obviously because it was a 4 minute long file.
+				</p>
+				<p class="AsteriskMessage">
+					Making sane choices about video/audio length and quality can lead to nicer results.
+				</p>
+			</div>
 		</div>
 
 	</div>

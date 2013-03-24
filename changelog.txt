@@ -1,3 +1,7 @@
+1.2
+- Made numbers format properly
+- Changed the multiplexing overhead value to 30000 (vs 28000)
+
 1.1
 - Added a custom text field so it would display properly and update properly
 - Made temporary sound stay in memory and not require a file stream
