@@ -2416,16 +2416,8 @@ var VPlayer = (function () {
 		*/
 		reset: function () {
 			// Remove HTML
-			if (this.element_container != null) {
-				if (this.element_container.parentNode != null) {
-					this.element_container.parentNode.removeChild(this.element_container);
-				}
-				this.element_container = null;
-			}
-			this.video_tag = null;
-			this.audio_tag = null;
-			this.image_tag = null;
-			this.main_tag = { "currentTime": 0.0 }; // have defaults so get_time() can work without fail
+			this.remove_html();
+
 			// Clear data
 			if (this.video_blob != null) {
 				this.video_blob = null;
@@ -2444,6 +2436,42 @@ var VPlayer = (function () {
 			}
 
 			// Other settings
+			this.volume = 0.5;
+			
+			this.sync_offset = 0.0;
+
+			this.video_fades = [ false , false ];
+			this.audio_fades = [ false , false ];
+
+			this.video_play_style = [ DISPLAY_NOTHING , DISPLAY_NOTHING ];
+			this.audio_play_style = [ PLAY_NOTHING , PLAY_NOTHING ];
+
+			return this;
+		},
+
+		/**
+			Remove all the HTML elements of the object from the document.
+
+			@return
+				this
+		*/
+		remove_html: function () {
+			// Clear timers
+			this_private.clear_timers.call(this);
+
+			// Remove HTML
+			if (this.element_container != null) {
+				if (this.element_container.parentNode != null) {
+					this.element_container.parentNode.removeChild(this.element_container);
+				}
+				this.element_container = null;
+			}
+			this.video_tag = null;
+			this.audio_tag = null;
+			this.image_tag = null;
+			this.main_tag = { "currentTime": 0.0 }; // have defaults so get_time() can work without fail
+
+			// Other settings
 			this.paused = true;
 
 			this.video_duration = 0.0;
@@ -2454,21 +2482,8 @@ var VPlayer = (function () {
 			this.metadata_load_count = 0;
 			this.metadata_load_count_required = 0;
 			this.metadata_ready = false;
-			this.volume = 0.5;
 			this.video_main = true;
 			this.has_both = false;
-
-			this.video_animation_end_function = null;
-			this.audio_animation_end_function = null;
-
-			this.sync_offset = 0.0;
-			this_private.clear_timers.call(this);
-
-			this.video_fades = [ false , false ];
-			this.audio_fades = [ false , false ];
-
-			this.video_play_style = [ DISPLAY_NOTHING , DISPLAY_NOTHING ];
-			this.audio_play_style = [ PLAY_NOTHING , PLAY_NOTHING ];
 
 			return this;
 		},
