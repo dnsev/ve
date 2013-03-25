@@ -624,13 +624,15 @@
 				var w = video_container_outer.width();
 				var h = video_container_outer.height();
 
-				if (this.get_video_size().width > 0 && this.get_video_size().height > 0) {
-					var scale = w / this.get_video_size().width;
-					var scale2 = h / this.get_video_size().height;
+				var v_size = (this.has_video() ? this.get_video_size() : this.get_image_size());
+				
+				if (v_size.width > 0 && v_size.height > 0) {
+					var scale = w / v_size.width;
+					var scale2 = h / v_size.height;
 					scale = (scale < scale2 ? scale : scale2);
 
-					var vid_width = this.get_video_size().width * scale;
-					var vid_height = this.get_video_size().height * scale;
+					var vid_width = v_size.width * scale;
+					var vid_height = v_size.height * scale;
 
 					$(this.get_container()).css({
 						"width": vid_width + "px",
