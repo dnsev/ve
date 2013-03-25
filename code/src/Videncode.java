@@ -1593,8 +1593,8 @@ public final class Videncode extends ThreadManager {
 	// Sync
 	private boolean[] syncAudioFade = new boolean[]{ false , false };
 	private int[] syncAudioState = new int[]{ SYNC_NOTHING , SYNC_NOTHING };
-	private boolean[] syncVideoFade = new boolean[]{ false , false };
-	private int[] syncVideoState = new int[]{ SYNC_NOTHING , SYNC_NOTHING };
+	private boolean[] syncVideoFade = new boolean[]{ true , true };
+	private int[] syncVideoState = new int[]{ SYNC_EXTERNAL , SYNC_EXTERNAL };
 
 
 	// Other
@@ -3889,10 +3889,10 @@ public final class Videncode extends ThreadManager {
 			this.syncAudioState[i] = SYNC_NOTHING;
 		}
 		for (int i = 0; i < this.syncVideoFade.length; ++i) {
-			this.syncVideoFade[i] = false;
+			this.syncVideoFade[i] = true;
 		}
 		for (int i = 0; i < this.syncVideoState.length; ++i) {
-			this.syncVideoState[i] = SYNC_NOTHING;
+			this.syncVideoState[i] = SYNC_EXTERNAL;
 		}
 	}
 	public final boolean getSyncAudioUseFade(boolean start) {
@@ -4055,6 +4055,18 @@ public final class Videncode extends ThreadManager {
 	public final void setOutputExtension(String fn) {
 		synchronized (this.outputLock) {
 			this.outputExtension = fn;
+		}
+	}
+	public final String getOutputExtensionDefault() {
+		String s;
+		synchronized (this.outputLock) {
+			s = this.outputExtensionDefault;
+		}
+		return s;
+	}
+	public final void setOutputExtensionDefault(String fn) {
+		synchronized (this.outputLock) {
+			this.outputExtensionDefault = fn;
 		}
 	}
 	public final boolean isOutputMuxing() {

@@ -413,6 +413,8 @@ public final class GUI extends JFrame {
 		private JComboBox<Integer> ffmpegThreadSelection = null;
 
 		private JTextFieldCustom outputMaxSize = null;
+		private JComboBox<Extension> outputFilenameExt = null;
+		private boolean outputFilenameExtChanging = false;
 
 		private JComboBox<String> guiMainTabSelection = null;
 
@@ -612,6 +614,7 @@ public final class GUI extends JFrame {
 		// Trigger update events
 		this.updateVideoAutoQualityProfileComboBox();
 		this.updateVideoBaselineFrameRateComboBox();
+		this.updateEncodeExtensionDefault();
 		this.onVideoFileSourceChange();
 		this.onVideoFileTempChange(false);
 		this.onImageFileSourceChange();
@@ -3642,6 +3645,38 @@ public final class GUI extends JFrame {
 			}
 		});
 		//}
+
+		//{
+		c.weightx = 0.5;
+		c.gridx = 0;
+		++c.gridy;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.fill = GridBagConstraints.NONE;
+		container.add(text = new JLabel("Default extension"), c);
+		text.setFont(this.fonts.text);
+		text.setForeground(this.colors.text);
+
+		++c.gridx;
+		c.weightx = 0.0;
+		container.add(pad = new JPanel(), c);
+		pad.setPreferredSize(new Dimension(10, 0));
+
+		++c.gridx;
+		c.weightx = 0.5;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.fill = GridBagConstraints.VERTICAL;
+		container.add(this.settings.outputFilenameExt = new JComboBox<Extension>(this.outputExtensions), c);
+		this.settings.outputFilenameExt.setFont(this.fonts.textSmall);
+		this.settings.outputFilenameExt.setForeground(this.colors.text);
+		this.settings.outputFilenameExt.setOpaque(false);
+		this.settings.outputFilenameExt.addActionListener(new ActionListener(){
+			@Override
+			public final void actionPerformed(ActionEvent event) {
+				self.onEncodeExtensionChangeDefault((Extension) ((JComboBox) event.getSource()).getSelectedItem());
+				self.enableSaveSettingsButton();
+			}
+		});
+		//}
 	}
 	private final void setupTabEncodeSettingsGUI(JPanel container) {
 		final GUI self = this;
@@ -5773,11 +5808,36 @@ public final class GUI extends JFrame {
 
 		this.encode.outputFilenameExtChanging = b;
 	}
+	private final void updateEncodeExtensionDefault() {
+		boolean b = this.settings.outputFilenameExtChanging;
+		this.settings.outputFilenameExtChanging = true;
+
+		// Extension update
+		String vidExt = this.videncode.getOutputExtensionDefault();
+		File f = this.videncode.getImageFileTemp();
+		String ext = (f == null ? "*" : Videncode.getFileExt(f));
+
+		this.settings.outputFilenameExt.removeAllItems();
+		for (int i = 0; i < this.outputExtensions.length; ++i) {
+			this.outputExtensions[i].setWildcard(ext);
+			this.settings.outputFilenameExt.addItem(this.outputExtensions[i]);
+			if (this.outputExtensions[i].getExtension().equals(vidExt)) {
+				this.settings.outputFilenameExt.setSelectedIndex(i);
+			}
+		}
+
+		this.settings.outputFilenameExtChanging = b;
+	}
 
 	private final void onEncodeExtensionChange(Extension ext) {
 		if (ext == null || this.encode.outputFilenameExtChanging) return;
 
 		this.videncode.setOutputExtension(ext.getExtension());
+	}
+	private final void onEncodeExtensionChangeDefault(Extension ext) {
+		if (ext == null || this.settings.outputFilenameExtChanging) return;
+
+		this.videncode.setOutputExtensionDefault(ext.getExtension());
 	}
 	private final void onEncodeButtonPress() {
 		this.encode.statusDisplay.setText(" ");
