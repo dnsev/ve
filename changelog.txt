@@ -1,3 +1,7 @@
+1.3
+- Changed some default sync settings
+- Added a setting to save the default file extension
+
 1.2
 - Made numbers format properly
 - Changed the multiplexing overhead value to 30000 (vs 28000)

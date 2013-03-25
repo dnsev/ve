@@ -255,6 +255,18 @@
 			</div>
 		</div>
 
+		<div class="ContentHeader"><span class="ContentHeaderTitle">Settings</span>:</div>
+		<div class="ContentBody">
+			<p>
+				<span class="VAligned">Settings are saved in a file called </span><a class="VAligned InlineCodeLink" href="https://github.com/dnsev/ve/blob/master/code/bin/settings.json" target="_blank">settings.json</a><span class="VAligned"> which is located inside </span><span class="VAligned InlineCode">Videncode.jar</span><span class="VAligned">, or you can place one in the folder.</span>
+			</p>
+			<p>
+				<span class="VAligned">You can also safely delete the external settings file without consequence.</span>
+			</p>
+			<p>
+				<span class="VAligned">Finally, there are a few advanced settings in the file which can't be edited in the application, such as the GUI color.</span>
+			</p>
+		</div>
 	</div>
 
 	<div class="Content ContentWidth" id="content_changes">
@@ -514,6 +526,11 @@
 		<div class="ContentBody">
 			<p>
 				<span class="VAligned">The main API file, </span><span class="VAligned InlineCode">ve_api.js</span><span class="VAligned">, is documented in the file itself. Reading the comments and/or looking at the test code should explain how it's used.</span>
+			</p>
+			<p>
+				<span class="VAligned">The file is also designed such that it has 3 segments: </span><span class="VAligned InlineCode">Vid<i>encode</i></span><span class="VAligned">, </span><span class="VAligned InlineCode">Vi<i>decode</i></span><span class="VAligned">, and </span><span class="VAligned InlineCode">VPlayer</span><span class="VAligned">. Each section can run on its own, with the exception that </span><span class="VAligned InlineCode">VPlayer</span><span class="VAligned"> uses a </span><span class="VAligned InlineCode">Vi<i>decode</i></span><span class="VAligned"> object.</span>
+			<p>
+				<span class="VAligned">For example, if you want to use the </span><span class="VAligned InlineCode">Vi<i>decode</i></span><span class="VAligned"> part, but not the </span><span class="VAligned InlineCode">Vid<i>encode</i></span><span class="VAligned"> part, you can cut that code out. Alternatively, you can name each of the three classes to whatever you like without error.</span>
 			</p>
 		</div>
 
