@@ -51,6 +51,8 @@
 	var videcode = null;
 	var vplayer = null;
 
+	var load_mode_instant = true;
+
 	// Elements
 	var namespace = "ve_api_test";
 	var dragdrop_info_display = null;
@@ -283,6 +285,18 @@
 				.addClass("APITestVideoFileControls")
 				.append(
 					(video_status_label = E("span"))
+					.html("no status")
+				)
+				.append(
+					E("span")
+					.html(" / ")
+				)
+				.append(
+					E("a")
+					.attr("target", "_blank")
+					.css("cursor", "pointer")
+					.html("instant")
+					.on("click", on_api_load_mode_click)
 				)
 			)
 			.append(
@@ -585,117 +599,130 @@
 
 		// New
 		videcode = new Videcode(ui8_data, filename);
-		if (!videcode.decode().has_error()) {
-			// Clear
-			if (dragdrop_info_display_inner != null) {
-				dragdrop_info_display_inner.remove();
-				dragdrop_info_display_inner = null;
-			}
-			video_container.html("");
-			retag_container.css("display", "");
-
-			// Create data
-			vplayer = new VPlayer(videcode);
-
-			// Setup html
-			video_status_label.html("loading");
-			filename_display.html(text_to_html(filename));
-			tag_display.html("[" + text_to_html(videcode.get_tag()) + "]");
-			link_display.css("display", "");
-			if (vplayer.get_video_url() != null) video_link.attr("href", vplayer.get_video_url());
-			else video_link.removeAttr("href");
-			if (vplayer.get_audio_url() != null) audio_link.attr("href", vplayer.get_audio_url());
-			else audio_link.removeAttr("href");
-			if (vplayer.get_image_url() != null) image_link.attr("href", vplayer.get_image_url());
-			else image_link.removeAttr("href");
-
-			video_seek_label.html("0");
-			video_seek_bar.css("width", "0%");
-
-			retag_video_main_container.css("display", "none");
-			retag_audio_main_container.css("display", "none");
-			retag_regenerating_container.css("display", "none");
-			setup_retag(videcode);
-
-			// Setup player
-			vplayer
-			.on("load", function (data) {
-				// Set container size
-				var w = video_container_outer.width();
-				var h = video_container_outer.height();
-
-				var v_size = (this.has_video() ? this.get_video_size() : this.get_image_size());
-				
-				if (v_size.width > 0 && v_size.height > 0) {
-					var scale = w / v_size.width;
-					var scale2 = h / v_size.height;
-					scale = (scale < scale2 ? scale : scale2);
-
-					var vid_width = v_size.width * scale;
-					var vid_height = v_size.height * scale;
-
-					$(this.get_container()).css({
-						"width": vid_width + "px",
-						"height": vid_height + "px"
-					});
-
-					video_container.css("padding-top", ((h - vid_height) / 2.0) + "px");
+		var callback = function () {
+			if (!videcode.has_error()) {
+				// Clear
+				if (dragdrop_info_display_inner != null) {
+					dragdrop_info_display_inner.remove();
+					dragdrop_info_display_inner = null;
 				}
+				video_container.html("");
+				retag_container.css("display", "");
 
-				// Status
-				video_status_label.html("loaded");
+				// Create data
+				vplayer = new VPlayer(videcode);
+
+				// Setup html
+				video_status_label.html("loading");
+				filename_display.html(text_to_html(filename));
+				tag_display.html("[" + text_to_html(videcode.get_tag()) + "]");
+				link_display.css("display", "");
+				if (vplayer.get_video_url() != null) video_link.attr("href", vplayer.get_video_url());
+				else video_link.removeAttr("href");
+				if (vplayer.get_audio_url() != null) audio_link.attr("href", vplayer.get_audio_url());
+				else audio_link.removeAttr("href");
+				if (vplayer.get_image_url() != null) image_link.attr("href", vplayer.get_image_url());
+				else image_link.removeAttr("href");
+
 				video_seek_label.html("0");
 				video_seek_bar.css("width", "0%");
 
-				if (vplayer.has_video_and_audio()) {
-					retag_video_main_container.css("display", vplayer.is_video_main() ? "" : "none");
-					retag_audio_main_container.css("display", vplayer.is_video_main() ? "none" : "");
-					if (videcode != null) {
-						retag_form.find("[name=sync_offset]").val(vplayer.get_sync_offset());
+				retag_video_main_container.css("display", "none");
+				retag_audio_main_container.css("display", "none");
+				retag_regenerating_container.css("display", "none");
+				setup_retag(videcode);
+
+				// Setup player
+				vplayer
+				.on("load", function (data) {
+					// Set container size
+					var w = video_container_outer.width();
+					var h = video_container_outer.height();
+
+					var v_size = (this.has_video() ? this.get_video_size() : this.get_image_size());
+
+					if (v_size.width > 0 && v_size.height > 0) {
+						var scale = w / v_size.width;
+						var scale2 = h / v_size.height;
+						scale = (scale < scale2 ? scale : scale2);
+
+						var vid_width = v_size.width * scale;
+						var vid_height = v_size.height * scale;
+
+						$(this.get_container()).css({
+							"width": vid_width + "px",
+							"height": vid_height + "px"
+						});
+
+						video_container.css("padding-top", ((h - vid_height) / 2.0) + "px");
 					}
-				}
-			})
-			.on("error", function (data) {
-				video_status_label.html("error");
-			})
-			.on("timeupdate", function (data) {
-				if (!video_seeking) {
+
+					// Status
+					video_status_label.html("loaded");
+					video_seek_label.html("0");
+					video_seek_bar.css("width", "0%");
+
+					if (vplayer.has_video_and_audio()) {
+						retag_video_main_container.css("display", vplayer.is_video_main() ? "" : "none");
+						retag_audio_main_container.css("display", vplayer.is_video_main() ? "none" : "");
+						if (videcode != null) {
+							retag_form.find("[name=sync_offset]").val(vplayer.get_sync_offset());
+						}
+					}
+				})
+				.on("error", function (data) {
+					video_status_label.html("error");
+				})
+				.on("timeupdate", function (data) {
+					if (!video_seeking) {
+						video_seek_label.html(data.time);
+						video_seek_bar.css("width", (data.time / data.duration * 100) + "%");
+					}
+				})
+				.on("volumechange", function (data) {
+					volume_display.html(Math.round(data.volume * 100) + "%");
+				})
+				.on("seek", function (data) {
 					video_seek_label.html(data.time);
 					video_seek_bar.css("width", (data.time / data.duration * 100) + "%");
-				}
-			})
-			.on("volumechange", function (data) {
-				volume_display.html(Math.round(data.volume * 100) + "%");
-			})
-			.on("seek", function (data) {
-				video_seek_label.html(data.time);
-				video_seek_bar.css("width", (data.time / data.duration * 100) + "%");
-			})
-			.on("play", function (data) {
-				video_status_label.html("playing");
-			})
-			.on("pause", function (data) {
-				video_status_label.html("paused");
-			})
-			.on("end", function (data) {
-				video_status_label.html("ended");
-			})
-			.create_html(video_container[0]);
+				})
+				.on("play", function (data) {
+					video_status_label.html("playing");
+				})
+				.on("pause", function (data) {
+					video_status_label.html("paused");
+				})
+				.on("end", function (data) {
+					video_status_label.html("ended");
+				})
+				.create_html(video_container[0]);
 
-			// Volume
-			volume_display.html(Math.round(vplayer.get_volume() * 100) + "%");
+				// Volume
+				volume_display.html(Math.round(vplayer.get_volume() * 100) + "%");
+			}
+			else {
+				// Error
+				video_status_label.html("Error: " + videcode.get_error());
+				retag_container.css("display", "none");
+				link_display.css("display", "none");
+				filename_display.html("no file");
+				tag_display.html("");
+
+				video_seek_label.html("0");
+				video_seek_bar.css("width", "0%");
+			}
+		};
+
+		if (load_mode_instant) {
+			videcode.decode();
 		}
 		else {
-			// Error
-			video_status_label.html("Error: " + videcode.get_error());
-			retag_container.css("display", "none");
-			link_display.css("display", "none");
-			filename_display.html("no file");
-			tag_display.html("");
-
-			video_seek_label.html("0");
-			video_seek_bar.css("width", "0%");
+			videcode.decode_async({steps:1000, delay:1}, callback, function (data) {
+				// Status
+				video_status_label.html("Loading: " + (Math.round(data.percent * 10000) / 100) + "%");
+			});
 		}
+		callback();
 	}
 	function setup_retag(videcode) {
 		retag_form.find("[name=tag]").val(videcode.get_tag());
@@ -765,6 +792,16 @@
 
 		// Done
 		return false;
+	}
+
+	// Load
+	function on_api_load_mode_click(event) {
+		if (event.which == 1) {
+			load_mode_instant = !load_mode_instant;
+			$(this).html(load_mode_instant ? "instant" : "asynchronous");
+			return false;
+		}
+		return true;
 	}
 
 	// Play/pause
