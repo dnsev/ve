@@ -613,6 +613,15 @@ a.InstallLink:active {
 	margin-left: 8px;
 }
 
+.UnstyledLink, a.UnstyledLink, .UnstyledLink:link, .UnstyledLink:hover, .UnstyledLink:active, .UnstyledLink:visited {
+	color: inherit !important;
+	text-decoration: inherit !important;
+	cursor: inherit !important;
+}
+.AboutDescription {
+	font-style: italic;
+}
+
 .InstallDescription  {
 	color: #a44fd6;
 }
@@ -679,4 +688,9 @@ a.InstallLink:active {
 .UseImagePreviewSmall.UseImagePreviewSmallFinal {
 	height: 243px;
 	background-size: 320px 243px;
+}
+
+.Highlighted, .UnstyledLink.Highlighted {
+	background: #7b1cb1 !important;
+	color: #debdf1 !important;
 }
