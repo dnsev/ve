@@ -287,7 +287,6 @@ PageBrowser.prototype = {
 				catch (e) {}
 			}
 		}
-		//if (!refresh && !scrolled) $(document).scrollTop(0);
 
 		// Highlight
 		$(".Highlighted").removeClass("Highlighted");
@@ -297,7 +296,7 @@ PageBrowser.prototype = {
 				scroll_to.addClass("Highlighted");
 			}
 		}
-		
+
 		// Activate
 		if ("activate" in vars) {
 			var activate = $("[multi_id=" + vars["activate"].replace(/\W/g, "\\$&") + "]:visible");
