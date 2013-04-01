@@ -1,3 +1,8 @@
+1.4
+- Added automatic update checking; disableable through settings
+- Videncode text up at the top is now clickable and directs to the homepage
+- A link under the "Encode" button now leads to the test page
+
 1.3
 - Changed some default sync settings
 - Added a setting to save the default file extension
