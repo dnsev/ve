@@ -4213,9 +4213,26 @@ public final class Videncode extends ThreadManager {
 		Thread t = new Thread() {
 			@Override
 			public final void run() {
+				// Test ffmpeg
 				Process p = null;
 				try {
 					p = Runtime.getRuntime().exec(new String[]{ "ffmpeg" , "-version" });
+				}
+				catch (IOException e) {
+					p = null;
+				}
+
+				if (p == null) {
+					// FFmpeg not installed
+					if (r != null) {
+						SwingUtilities.invokeLater(r);
+					}
+				}
+
+				// Test ffprobe
+				p = null;
+				try {
+					p = Runtime.getRuntime().exec(new String[]{ "ffprobe" , "-version" });
 				}
 				catch (IOException e) {
 					p = null;

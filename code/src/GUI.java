@@ -12,9 +12,14 @@ import javax.swing.event.*;
 import javax.swing.filechooser.*;
 
 import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.HttpURLConnection;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import javax.imageio.*;
 import javax.imageio.stream.*;
 
@@ -206,6 +211,7 @@ public final class GUI extends JFrame {
 		private final Font titleVersion = new Font("Verdana", Font.BOLD | Font.ITALIC, 16);
 		private final Font tabLabel = new Font("Verdana", Font.PLAIN, 20);
 		private final Font text = new Font("Verdana", Font.PLAIN, 16);
+		private final Font textUnderline = FontList.attr(new Font("Verdana", Font.PLAIN, 16), TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
 		private final Font textItalic = new Font("Verdana", Font.ITALIC, 16);
 		private final Font textBold = new Font("Verdana", Font.BOLD, 16);
 		private final Font textSmall = new Font("Verdana", Font.PLAIN, 12);
@@ -242,6 +248,7 @@ public final class GUI extends JFrame {
 	private Image noimage = null;
 	private JTabbedPane tabManager = null;
 	private boolean ffmpegStartupCheck = true;
+	private boolean updateStartupCheck = true;
 
 
 	//{ Image
@@ -405,6 +412,8 @@ public final class GUI extends JFrame {
 	//}
 
 	//{ Other
+	private JLabel[] updateAvailableLabels = new JLabel[4];
+
 	private Videncode.AutoQualityProfile encodingAutoQualityProfile = null;
 	//}
 
@@ -417,6 +426,7 @@ public final class GUI extends JFrame {
 		private boolean outputFilenameExtChanging = false;
 
 		private JComboBox<String> guiMainTabSelection = null;
+		private JCheckBox appUpdateCheckEnabled = null;
 
 		private JCheckBox appVideoAutoQualityEnabled = null;
 		private JComboBox<Videncode.AutoQualityProfile> appVideoAutoQuality = null;
@@ -435,6 +445,7 @@ public final class GUI extends JFrame {
 	// Constructor
 	public GUI(Videncode ve, JSON.Node node) {
 		super();
+		final GUI self = this;
 
 		this.loadSettings(node);
 
@@ -490,52 +501,90 @@ public final class GUI extends JFrame {
 		p0.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		//{ Add the title
-		p0.add((p1 = new JPanel()));
-		p1.setLayout(null);
-		p1.setOpaque(false);
-		p1.setAlignmentX(Component.LEFT_ALIGNMENT);
+		Color[] titleColors1 = new Color[]{ this.colors.textLight1 , this.colors.textShadow1 };
+		Color[] titleColors2 = new Color[]{ this.colors.textLight2 , this.colors.textShadow2 };
+		int[][] titleOffsets1 = new int[][]{ new int[]{ 0 , 0 } , new int[]{ 3 , 0 } };
+		int[][] titleOffsets2 = new int[][]{ new int[]{ 0 , 0 } , new int[]{ 2 , 0 } };
+		for (int i = 0; i < 2; ++i) {
+			p0.add((p1 = new JPanel()));
+			p1.setLayout(null);
+			p1.setOpaque(false);
+			p1.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		p1.add((p2 = new JPanel()));
-		p2.setLayout(new BoxLayout(p2, BoxLayout.X_AXIS));
-		p2.setOpaque(false);
-		p2.setAlignmentX(Component.LEFT_ALIGNMENT);
-		p2.setBounds(0, 0, 640, 128);
+			p1.add((p2 = new JPanel()));
+			p2.setLayout(new BoxLayout(p2, BoxLayout.X_AXIS));
+			p2.setOpaque(false);
+			p2.setAlignmentX(Component.LEFT_ALIGNMENT);
+			p2.setBounds(0, 0, 640, 128);
 
-		p2.add((t1 = new JLabel("Videncode")));
-		t1.setFont(this.fonts.title);
-		t1.setAlignmentY(Component.TOP_ALIGNMENT);
-		t1.setForeground(this.colors.textLight1);
-		t1.setBorder(BorderFactory.createEmptyBorder(-8, 0, 0, 0));
+			p2.add((t1 = new JLabel("Videncode")));
+			t1.setFont(this.fonts.title);
+			t1.setAlignmentY(Component.TOP_ALIGNMENT);
+			t1.setForeground(titleColors1[i]);
+			t1.setBorder(BorderFactory.createEmptyBorder(-8 + titleOffsets1[i][0], 0 + titleOffsets1[i][1], 0, 0));
+			t1.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			t1.addMouseListener(new MouseListener() {
+				@Override
+				public final void mouseClicked(MouseEvent event) {
+					self.openURL("http://dnsev.github.com/ve/");
+				}
 
-		p2.add((t1 = new JLabel("v" + Main.getVersion())));
-		t1.setFont(this.fonts.titleVersion);
-		t1.setAlignmentY(Component.TOP_ALIGNMENT);
-		t1.setForeground(this.colors.textLight2);
-		t1.setBorder(BorderFactory.createEmptyBorder(-1, 3, 0, 0));
+				@Override
+				public final void mousePressed(MouseEvent event) {
+				}
+				@Override
+				public final void mouseReleased(MouseEvent event) {
+				}
+				@Override
+				public final void mouseEntered(MouseEvent event) {
+				}
+				@Override
+				public final void mouseExited(MouseEvent event) {
+				}
+			});
 
+			p2.add((t1 = new JLabel("v" + Main.getVersion())));
+			t1.setFont(this.fonts.titleVersion);
+			t1.setAlignmentY(Component.TOP_ALIGNMENT);
+			t1.setForeground(titleColors2[i]);
+			t1.setBorder(BorderFactory.createEmptyBorder(-1 + titleOffsets2[i][0], 3 + titleOffsets2[i][1], 0, 0));
 
-		p0.add((p1 = new JPanel()));
-		p1.setLayout(null);
-		p1.setOpaque(false);
-		p1.setAlignmentX(Component.LEFT_ALIGNMENT);
+			p2.add((t1 = new JLabel(" / ")));
+			t1.setFont(this.fonts.titleVersion);
+			t1.setAlignmentY(Component.TOP_ALIGNMENT);
+			t1.setForeground(titleColors2[i]);
+			t1.setBorder(BorderFactory.createEmptyBorder(-1 + titleOffsets2[i][0], 3 + titleOffsets2[i][1], 0, 0));
+			t1.setVisible(false);
+			this.updateAvailableLabels[i] = t1;
 
-		p1.add((p2 = new JPanel()));
-		p2.setLayout(new BoxLayout(p2, BoxLayout.X_AXIS));
-		p2.setOpaque(false);
-		p2.setAlignmentX(Component.LEFT_ALIGNMENT);
-		p2.setBounds(0, 0, 640, 128);
+			p2.add((t1 = new JLabel("Update Available")));
+			t1.setFont(this.fonts.titleVersion);
+			t1.setAlignmentY(Component.TOP_ALIGNMENT);
+			t1.setForeground(titleColors2[i]);
+			t1.setBorder(BorderFactory.createEmptyBorder(-1 + titleOffsets2[i][0], 3 + titleOffsets2[i][1], 0, 0));
+			t1.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			t1.setVisible(false);
+			this.updateAvailableLabels[i + 2] = t1;
+			t1.addMouseListener(new MouseListener() {
+				@Override
+				public final void mouseClicked(MouseEvent event) {
+					self.openURL("http://dnsev.github.com/ve/#changes");
+				}
 
-		p2.add((t1 = new JLabel("Videncode")));
-		t1.setFont(this.fonts.title);
-		t1.setAlignmentY(Component.TOP_ALIGNMENT);
-		t1.setForeground(this.colors.textShadow1);
-		t1.setBorder(BorderFactory.createEmptyBorder(-5, 0, 0, 0));
-
-		p2.add((t1 = new JLabel("v" + Main.getVersion())));
-		t1.setFont(this.fonts.titleVersion);
-		t1.setAlignmentY(Component.TOP_ALIGNMENT);
-		t1.setForeground(this.colors.textShadow2);
-		t1.setBorder(BorderFactory.createEmptyBorder(1, 3, 0, 0));
+				@Override
+				public final void mousePressed(MouseEvent event) {
+				}
+				@Override
+				public final void mouseReleased(MouseEvent event) {
+				}
+				@Override
+				public final void mouseEntered(MouseEvent event) {
+				}
+				@Override
+				public final void mouseExited(MouseEvent event) {
+				}
+			});
+		}
 		//}
 
 		//{ Setup tabs
@@ -553,7 +602,6 @@ public final class GUI extends JFrame {
 		tp1.setBackground(this.colors.background);
 		this.tabManager = tp1;
 
-		final GUI self = this;
 		tp1.setUI(new BasicTabbedPaneUI() {
 			@Override
 			protected void installDefaults() {
@@ -723,9 +771,20 @@ public final class GUI extends JFrame {
 			this.videncode.testFFmpegInstall(new Runnable() {
 				@Override
 				public final void run() {
-					JOptionPane.showMessageDialog(self.getRootPane(), "You don't seem to have ffmpeg installed\n\nCheck the homepage for details");
+					JOptionPane.showInputDialog(
+						self.getRootPane(),
+						"You don't seem to have ffmpeg/ffprobe installed\nCheck the homepage for details:",
+						"Incomplete install",
+						JOptionPane.ERROR_MESSAGE,
+						null,
+						null,
+						"http://dnsev.github.com/ve/"
+					);
 				}
 			});
+		}
+		if (this.updateStartupCheck) {
+			this.updateCheck();
 		}
 	}
 	private final void loadSettings(JSON.Node node) {
@@ -833,10 +892,15 @@ public final class GUI extends JFrame {
 		}
 		catch (Exception e) {}
 
-		// Startup check
+		// Startup checks
 		try {
 			boolean b = node.getObject().get("ffmpeg").getObject().get("statup_check").getBoolean();
 			this.ffmpegStartupCheck = b;
+		}
+		catch (Exception e) {}
+		try {
+			boolean b = node.getObject().get("app").getObject().get("update_check").getBoolean();
+			this.updateStartupCheck = b;
 		}
 		catch (Exception e) {}
 	}
@@ -847,6 +911,9 @@ public final class GUI extends JFrame {
 		.set("color_matrix", JSON.node(GUI.colorTransformMatrix))
 		.set("color_scale", JSON.node(GUI.colorScaleVector))
 		.set("default_tab", JSON.node(this.defaultTab));
+
+		node.get("app")
+		.set("update_check", JSON.node(new Boolean(this.updateStartupCheck)));
 
 		node.get("app").get("extensions")
 		.set("image", JSON.node(this.imageExtensions))
@@ -865,7 +932,120 @@ public final class GUI extends JFrame {
 		node.get("ffmpeg")
 		.set("startup_check", JSON.node(new Boolean(this.ffmpegStartupCheck)));
 	}
+	private final void openURL(String url) {
+		boolean opened;
+		try {
+			URI uri = new URI(url);
+			if (Desktop.isDesktopSupported()) {
+				try {
+					Desktop.getDesktop().browse(uri);
+					opened = true;
+				}
+				catch (IOException e) {
+					opened = false;
+				}
+			}
+			else {
+				opened = false;
+			}
+		}
+		catch (URISyntaxException e) {
+			opened = false;
+		}
+		if (!opened) {
+			JOptionPane.showInputDialog(
+				this.getRootPane(),
+				"Webpage:",
+				"Webpage",
+				JOptionPane.PLAIN_MESSAGE,
+				null,
+				null,
+				url
+			);
+		}
+	}
+	private final void parseChangeLog(String changelog) {
+		String lines[] = changelog.split("\\r?\\n");
+		String checkVersion = lines[0];
+		String currentVersion = Main.getVersion();
+		boolean updateNeeded = false;
 
+		String[] versions1 = checkVersion.split("\\.");
+		String[] versions2 = currentVersion.split("\\.");
+		int maxLen = (versions1.length > versions2.length ? versions1.length : versions2.length);
+		for (int i = 0; i < maxLen; ++i) {
+			int v1 = 0, v2 = 0;
+			if (versions1.length > i) {
+				try { v1 = Integer.parseInt(versions1[i]); }
+				catch (NumberFormatException e) {}
+			}
+			if (versions2.length > i) {
+				try { v2 = Integer.parseInt(versions2[i]); }
+				catch (NumberFormatException e) {}
+			}
+
+			if (v1 > v2) {
+				updateNeeded = true;
+				break;
+			}
+			else if (v2 > v1) {
+				break;
+			}
+		}
+
+		if (updateNeeded) {
+			this.showUpdateText(checkVersion);
+		}
+	}
+	private final void showUpdateText(String version) {
+		for (int i = 0; i < this.updateAvailableLabels.length; ++i) {
+			this.updateAvailableLabels[i].setVisible(true);
+
+			if (i >= 2) {
+				this.updateAvailableLabels[i].setText("Update Available (" + version + ")");
+			}
+		}
+	}
+	private final void updateCheck() {
+		final GUI self = this;
+		Thread t = new Thread() {
+			@Override
+			public final void run() {
+				final String response = GUI.httpGET("http://dnsev.github.com/ve/changelog.txt");
+				if (response != null) {
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public final void run() {
+							self.parseChangeLog(response);
+						}
+					});
+				}
+			}
+		};
+		t.start();
+	}
+	private static final String httpGET(String stringUrl) {
+		URL url;
+		HttpURLConnection conn;
+		BufferedReader rd;
+		StringBuilder result = new StringBuilder();
+		int len;
+		char[] buffer = new char[256];
+		try {
+			url = new URL(stringUrl);
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			while ((len = rd.read(buffer, 0, buffer.length)) >= 0) {
+				result.append(buffer, 0, len);
+			}
+			rd.close();
+		}
+		catch (Exception e) {
+			return null;
+		}
+		return result.toString();
+	}
 
 	private final void setupTimecodeLabels(JPanel container, JLabel timecodeFirst, JLabel timecodeLast, JTextFieldCustom[] ranges, ChangeListener[] rangeListeners) {
 		final GUI self = this;
@@ -3456,6 +3636,44 @@ public final class GUI extends JFrame {
 			}
 		});
 		//}
+
+		container.add(top = new JPanel(), BorderLayout.PAGE_END);
+		top.setLayout(new GridBagLayout());
+		top.setOpaque(false);
+
+		//{ Filename + ext
+		gc.weightx = 0.5;
+		gc.gridx = 0;
+		gc.gridy = 0;
+		gc.gridwidth = 1;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.fill = GridBagConstraints.NONE;
+		top.add(text = new JLabel("Click here to test your files"), gc);
+		text.setFont(this.fonts.textUnderline);
+		text.setForeground(this.colors.textAlt1);
+		text.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		text.addMouseListener(new MouseListener() {
+			@Override
+			public final void mouseClicked(MouseEvent event) {
+				self.openURL("http://dnsev.github.com/ve/#api/test");
+			}
+
+			@Override
+			public final void mousePressed(MouseEvent event) {
+			}
+			@Override
+			public final void mouseReleased(MouseEvent event) {
+			}
+			@Override
+			public final void mouseEntered(MouseEvent event) {
+			}
+			@Override
+			public final void mouseExited(MouseEvent event) {
+			}
+		});
+		//}
+
+
 	}
 	private final void setupTabEncodeSettings(JPanel container) {
 		final GUI self = this;
@@ -3474,10 +3692,10 @@ public final class GUI extends JFrame {
 		panel2.add(leftPanel = new JPanel());
 		leftPanel.setLayout(new GridBagLayout());
 		leftPanel.setOpaque(false);
-		border = BorderFactory.createTitledBorder(null, "FFmpeg", TitledBorder.CENTER, TitledBorder.TOP, this.fonts.text, this.colors.text);
+		border = BorderFactory.createTitledBorder(null, "App", TitledBorder.CENTER, TitledBorder.TOP, this.fonts.text, this.colors.text);
 		border.setBorder(BorderFactory.createLineBorder(this.colors.backgroundDark));
 		leftPanel.setBorder(border);
-		this.setupTabEncodeSettingsFFmpeg(leftPanel);
+		this.setupTabEncodeSettingsApp(leftPanel);
 
 		panel2.add(rightPanel = new JPanel());
 		rightPanel.setLayout(new GridBagLayout());
@@ -3495,10 +3713,10 @@ public final class GUI extends JFrame {
 		panel2.add(leftPanel = new JPanel());
 		leftPanel.setLayout(new GridBagLayout());
 		leftPanel.setOpaque(false);
-		border = BorderFactory.createTitledBorder(null, "GUI", TitledBorder.CENTER, TitledBorder.TOP, this.fonts.text, this.colors.text);
+		border = BorderFactory.createTitledBorder(null, "FFmpeg", TitledBorder.CENTER, TitledBorder.TOP, this.fonts.text, this.colors.text);
 		border.setBorder(BorderFactory.createLineBorder(this.colors.backgroundDark));
 		leftPanel.setBorder(border);
-		this.setupTabEncodeSettingsGUI(leftPanel);
+		this.setupTabEncodeSettingsFFmpeg(leftPanel);
 
 		panel2.add(rightPanel = new JPanel());
 		rightPanel.setLayout(new GridBagLayout());
@@ -3678,7 +3896,7 @@ public final class GUI extends JFrame {
 		});
 		//}
 	}
-	private final void setupTabEncodeSettingsGUI(JPanel container) {
+	private final void setupTabEncodeSettingsApp(JPanel container) {
 		final GUI self = this;
 		JLabel text;
 		JPanel pad;
@@ -3719,6 +3937,39 @@ public final class GUI extends JFrame {
 			@Override
 			public final void actionPerformed(ActionEvent event) {
 				self.defaultTab = (String) ((JComboBox) event.getSource()).getSelectedItem();
+				self.enableSaveSettingsButton();
+			}
+		});
+		//}
+
+		//{ Update check
+		c.weightx = 0.5;
+		c.gridx = 0;
+		++c.gridy;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.fill = GridBagConstraints.NONE;
+		container.add(text = new JLabel("Update check"), c);
+		text.setFont(this.fonts.text);
+		text.setForeground(this.colors.text);
+
+		++c.gridx;
+		c.weightx = 0.0;
+		container.add(pad = new JPanel(), c);
+		pad.setPreferredSize(new Dimension(10, 0));
+
+		++c.gridx;
+		c.weightx = 0.5;
+		c.anchor = GridBagConstraints.LINE_START;
+		container.add(this.settings.appUpdateCheckEnabled = new JCheckBox("enabled"), c);
+		this.settings.appUpdateCheckEnabled.setFont(this.fonts.text);
+		this.settings.appUpdateCheckEnabled.setForeground(this.colors.text);
+		this.settings.appUpdateCheckEnabled.setSelected(this.updateStartupCheck);
+		this.settings.appUpdateCheckEnabled.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 4));
+		this.settings.appUpdateCheckEnabled.setOpaque(false);
+		this.settings.appUpdateCheckEnabled.addActionListener(new ActionListener(){
+			@Override
+			public final void actionPerformed(ActionEvent event) {
+				self.updateStartupCheck = ((JCheckBox) event.getSource()).isSelected();
 				self.enableSaveSettingsButton();
 			}
 		});
