@@ -1,3 +1,8 @@
+1.5
+- Changed locale settings due to numbers being formatted improperly
+- Added an option to use the "Java" look and feel
+- Small GUI tweaks
+
 1.4
 - Added automatic update checking; disableable through settings
 - Videncode text up at the top is now clickable and directs to the homepage
