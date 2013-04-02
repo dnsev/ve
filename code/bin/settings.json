@@ -1,5 +1,6 @@
 {
 	"app": {
+		"local_look": true,
 		"update_check": true,
 		"temp_dir": "temp",
 		"extensions": {

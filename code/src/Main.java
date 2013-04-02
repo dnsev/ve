@@ -9,18 +9,35 @@ import java.io.InputStreamReader;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 
+import java.util.Locale;
+
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+
 
 
 public class Main {
 	private static File appDir = new File("");
 	private static String settingsFilename = "settings.json";
 	private static String version = "0";
+	private static char decimal = '.';
+	private static char comma = ',';
 
 	// Main
 	public static void main(String[] args) {
+		// Locale
+		Locale.setDefault(Locale.ENGLISH); // Force English; gets rid of some obnoxious number formatting issues
+		try {
+			DecimalFormat format = (DecimalFormat) DecimalFormat.getInstance();
+			DecimalFormatSymbols symbols = format.getDecimalFormatSymbols();
+			Main.decimal = symbols.getDecimalSeparator();
+			Main.comma = symbols.getGroupingSeparator();
+		}
+		catch (Exception e) {}
+
 		// Get app dir
 		String appDir = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-		if (appDir.endsWith(".exe") || appDir.endsWith(".jar")) {
+		if (appDir.toLowerCase().endsWith(".exe") || appDir.toLowerCase().endsWith(".jar")) {
 			appDir = new File(appDir).getParent();
 		}
 		else {
@@ -139,6 +156,13 @@ public class Main {
 
 	public static final String getVersion() {
 		return Main.version;
+	}
+
+	public static final char getComma() {
+		return Main.comma;
+	}
+	public static final char getDecimal() {
+		return Main.decimal;
 	}
 
 }

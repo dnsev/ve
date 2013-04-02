@@ -249,6 +249,7 @@ public final class GUI extends JFrame {
 	private JTabbedPane tabManager = null;
 	private boolean ffmpegStartupCheck = true;
 	private boolean updateStartupCheck = true;
+	private boolean useLocalLook = true;
 
 
 	//{ Image
@@ -427,6 +428,7 @@ public final class GUI extends JFrame {
 
 		private JComboBox<String> guiMainTabSelection = null;
 		private JCheckBox appUpdateCheckEnabled = null;
+		private JCheckBox appUseLocalLookEnabled = null;
 
 		private JCheckBox appVideoAutoQualityEnabled = null;
 		private JComboBox<Videncode.AutoQualityProfile> appVideoAutoQuality = null;
@@ -460,13 +462,27 @@ public final class GUI extends JFrame {
 		this.acquireResources();
 
 		// Style
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
-		catch (Exception e) {
+		if (this.useLocalLook) {
+			try {
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			}
+			catch (Exception e) {
+			}
 		}
 		System.setProperty("awt.useSystemAAFontSettings","on");
 		System.setProperty("swing.aatext", "true");
+		String[] types = new String[]{ "TextField" , "TextArea" , "CheckBox" , "ComboBox" , "RadioButton" , "Button" };
+		for (int i = 0; i < types.length; ++i) {
+			UIManager.put(types[i] + ".disabledBackground", this.colors.background);
+			UIManager.put(types[i] + ".inactiveBackground", this.colors.background);
+			UIManager.put(types[i] + ".disabledForeground", this.colors.textLight2);
+			UIManager.put(types[i] + ".inactiveForeground", this.colors.textLight2);
+			UIManager.put(types[i] + ".disabledText", this.colors.textLight2);
+		}
+		UIManager.put("TabbedPane.background", this.colors.background);
+		UIManager.put("TabbedPane.contentAreaColor", this.colors.background);
+		UIManager.put("TabbedPane.tabAreaBackground", this.colors.background);
+		UIManager.put("TabbedPane.selected", this.colors.background);
 
 		// Window setup
 		this.setTitle("Videncode");
@@ -593,6 +609,7 @@ public final class GUI extends JFrame {
 		p1.setOpaque(false);
 		p1.setAlignmentX(Component.LEFT_ALIGNMENT);
 		p1.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0));
+		p1.setBackground(this.colors.background);
 
 		tp1 = new JTabbedPane(JTabbedPane.TOP);
 		tp1.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
@@ -654,8 +671,8 @@ public final class GUI extends JFrame {
 		for (int i = 0; i < tp1.getTabCount(); ++i) {
 			if (tp1.getTitleAt(i).equals(this.defaultTab)) {
 				tp1.setSelectedIndex(i);
-				break;
 			}
+			tp1.setBackgroundAt(i, null);
 		}
 		this.setupTabEncode(encodePanel);
 
@@ -903,6 +920,11 @@ public final class GUI extends JFrame {
 			this.updateStartupCheck = b;
 		}
 		catch (Exception e) {}
+		try {
+			boolean b = node.getObject().get("app").getObject().get("local_look").getBoolean();
+			this.useLocalLook = b;
+		}
+		catch (Exception e) {}
 	}
 	public final void saveSettings(JSON.Node node) {
 		if (node == null) return;
@@ -913,7 +935,8 @@ public final class GUI extends JFrame {
 		.set("default_tab", JSON.node(this.defaultTab));
 
 		node.get("app")
-		.set("update_check", JSON.node(new Boolean(this.updateStartupCheck)));
+		.set("update_check", JSON.node(new Boolean(this.updateStartupCheck)))
+		.set("local_look", JSON.node(new Boolean(this.useLocalLook)));
 
 		node.get("app").get("extensions")
 		.set("image", JSON.node(this.imageExtensions))
@@ -3970,6 +3993,39 @@ public final class GUI extends JFrame {
 			@Override
 			public final void actionPerformed(ActionEvent event) {
 				self.updateStartupCheck = ((JCheckBox) event.getSource()).isSelected();
+				self.enableSaveSettingsButton();
+			}
+		});
+		//}
+
+		//{ Look
+		c.weightx = 0.5;
+		c.gridx = 0;
+		++c.gridy;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.fill = GridBagConstraints.NONE;
+		container.add(text = new JLabel("Local look"), c);
+		text.setFont(this.fonts.text);
+		text.setForeground(this.colors.text);
+
+		++c.gridx;
+		c.weightx = 0.0;
+		container.add(pad = new JPanel(), c);
+		pad.setPreferredSize(new Dimension(10, 0));
+
+		++c.gridx;
+		c.weightx = 0.5;
+		c.anchor = GridBagConstraints.LINE_START;
+		container.add(this.settings.appUseLocalLookEnabled = new JCheckBox("enabled"), c);
+		this.settings.appUseLocalLookEnabled.setFont(this.fonts.text);
+		this.settings.appUseLocalLookEnabled.setForeground(this.colors.text);
+		this.settings.appUseLocalLookEnabled.setSelected(this.useLocalLook);
+		this.settings.appUseLocalLookEnabled.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 4));
+		this.settings.appUseLocalLookEnabled.setOpaque(false);
+		this.settings.appUseLocalLookEnabled.addActionListener(new ActionListener(){
+			@Override
+			public final void actionPerformed(ActionEvent event) {
+				self.useLocalLook = ((JCheckBox) event.getSource()).isSelected();
 				self.enableSaveSettingsButton();
 			}
 		});

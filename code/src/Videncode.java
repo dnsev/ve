@@ -475,7 +475,7 @@ public final class Videncode extends ThreadManager {
 				// Process params
 				ArrayList<String> params = new ArrayList<String>(Arrays.asList(new String[]{
 					"ffmpeg",
-					"-y", "-nostdin",
+					"-y",
 					"-v", "info",
 					"-ss", Videncode.timeToString(this.time),
 					"-i", this.inputFile.getAbsolutePath()
@@ -666,7 +666,7 @@ public final class Videncode extends ThreadManager {
 						params.addAll(Arrays.asList(new String[]{ "-progress", "pipe:1" }));
 					}
 					params.addAll(Arrays.asList(new String[]{
-						"-y", "-nostdin",
+						"-y",
 						"-v", "info",
 						"-i", (pass == 0 ? this.inputFile.getAbsolutePath() : this.outputFile.getAbsolutePath()),
 						"-map_metadata", "-1",
@@ -902,7 +902,7 @@ public final class Videncode extends ThreadManager {
 							params.addAll(Arrays.asList(new String[]{ "-progress", "pipe:1" }));
 						}
 						params.addAll(Arrays.asList(new String[]{
-							"-y", "-nostdin",
+							"-y",
 							"-v", "info",
 							"-i", this.inputFile.getAbsolutePath(),
 							"-an",
@@ -1160,7 +1160,7 @@ public final class Videncode extends ThreadManager {
 					// Process params
 					ArrayList<String> params = new ArrayList<String>(Arrays.asList(new String[]{
 						"ffmpeg",
-						"-y", "-nostdin",
+						"-y",
 						"-v", "info",
 						"-i", this.audioFile.getAbsolutePath(),
 						"-i", this.videoFile.getAbsolutePath(),
@@ -4374,12 +4374,12 @@ public final class Videncode extends ThreadManager {
 			number = -number;
 		}
 
-		sb.append(Integer.valueOf(number).toString().replaceAll("(\\d)(?=(\\d{3})+$)", "$1,"));
+		sb.append(Integer.valueOf(number).toString().replaceAll("(\\d)(?=(\\d{3})+$)", "$1" + Main.getComma()));
 
 		return sb.toString();
 	}
 	public static final String strAddComas(String str) {
-		return str.replaceAll("(\\d)(?=(\\d{3})+$)", "$1,");
+		return str.replaceAll("(\\d)(?=(\\d{3})+$)", "$1" + Main.getComma());
 	}
 	public static final String numberToLabeledSize(double number, int minLenForCommas, int decimalLength, int cutoffRange, int divisionValue, final String[] suffixes) {
 		int i = 2;
