@@ -971,6 +971,7 @@
 				retag_regenerate_container.css("display", "none");
 				retag_download_container.css("display", "");
 				retag_regenerating_container.css("display", "none");
+				retag_download_link.attr("download", "blob." + (videcode ? videcode.get_image_mime_type().substr(6).replace(/jpeg/ig, "jpg") : "jpg"));
 
 				// Create link
 				var url = videncode.get_url();
