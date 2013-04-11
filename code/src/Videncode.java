@@ -8,6 +8,11 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.nio.channels.FileChannel;
 
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -1602,7 +1607,6 @@ public final class Videncode extends ThreadManager {
 	private ArrayList<VidencodeEventListener> videoChangeListeners = new ArrayList<VidencodeEventListener>();
 
 
-
 	// Constructor
 	public Videncode(JSON.Node node) {
 		this.loadSettings(node);
@@ -1903,7 +1907,8 @@ public final class Videncode extends ThreadManager {
 
 
 		// Framerate
-		double framerate = 1.0;
+		double framerateFallback = 30.0;
+		double framerate = framerateFallback;
 		Pattern p = Pattern.compile("([0-9]+)(/([0-9]+))?");
 		String fps = "0";
 		try {
@@ -1913,7 +1918,7 @@ public final class Videncode extends ThreadManager {
 				if (
 					a.get(i).getObject().get("width") != null &&
 					a.get(i).getObject().get("height") != null &&
-					(n = a.get(i).getObject().get("avg_frame_rate")) != null
+					(n = a.get(i).getObject().get("r_frame_rate")) != null
 				) {
 					fps = n.getString();
 					break;
@@ -1925,7 +1930,7 @@ public final class Videncode extends ThreadManager {
 			Matcher m = p.matcher(fps);
 			if (m.matches()) {
 				if (Integer.parseInt(m.group(3)) == 0) {
-					framerate = 1.0;
+					framerate = framerateFallback;
 				}
 				else {
 					framerate = Integer.parseInt(m.group(1)) / ((double) Integer.parseInt(m.group(3)));
@@ -1936,7 +1941,11 @@ public final class Videncode extends ThreadManager {
 			}
 		}
 		catch (NumberFormatException e) {
-			framerate = 1.0;
+			framerate = framerateFallback;
+		}
+
+		if (framerate >= 1000.0) {
+			framerate = framerateFallback;
 		}
 
 
@@ -4226,6 +4235,7 @@ public final class Videncode extends ThreadManager {
 					// FFmpeg not installed
 					if (r != null) {
 						SwingUtilities.invokeLater(r);
+						return;
 					}
 				}
 
@@ -4242,6 +4252,7 @@ public final class Videncode extends ThreadManager {
 					// FFmpeg not installed
 					if (r != null) {
 						SwingUtilities.invokeLater(r);
+						return;
 					}
 				}
 			}

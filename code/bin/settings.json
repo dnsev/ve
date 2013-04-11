@@ -3,6 +3,7 @@
 		"local_look": true,
 		"update_check": true,
 		"temp_dir": "temp",
+		"show_advanced_tab": false,
 		"extensions": {
 			"image": [ ".png" , ".jpg" , ".jpeg" , ".gif" ],
 			"audio": [ ".mp3" , ".ogg" , ".oga" , ".flac" , ".wav" ],

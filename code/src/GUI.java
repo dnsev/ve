@@ -247,9 +247,11 @@ public final class GUI extends JFrame {
 	private Videncode videncode = null;
 	private Image noimage = null;
 	private JTabbedPane tabManager = null;
+	private JPanel tabAdvanced = null;
 	private boolean ffmpegStartupCheck = true;
 	private boolean updateStartupCheck = true;
 	private boolean useLocalLook = true;
+	private boolean tabAdvancedEnabled = false;
 
 
 	//{ Image
@@ -394,12 +396,6 @@ public final class GUI extends JFrame {
 
 		private JLabel statusDisplay = null;
 
-		private JTextArea[][] logs = new JTextArea[][]{
-			new JTextArea[]{ null , null },
-			new JTextArea[]{ null , null },
-			new JTextArea[]{ null , null }
-		};
-
 		private JPanel errorPanel = null;
 		private JLabel errorMessage = null;
 
@@ -429,6 +425,7 @@ public final class GUI extends JFrame {
 		private JComboBox<String> guiMainTabSelection = null;
 		private JCheckBox appUpdateCheckEnabled = null;
 		private JCheckBox appUseLocalLookEnabled = null;
+		private JCheckBox appShowAdvancedTab = null;
 
 		private JCheckBox appVideoAutoQualityEnabled = null;
 		private JComboBox<Videncode.AutoQualityProfile> appVideoAutoQuality = null;
@@ -443,6 +440,18 @@ public final class GUI extends JFrame {
 	private SettingsVars settings = new SettingsVars();
 	//}
 
+	//{ Advanced
+	private class AdvancedVars {
+
+		private JTextArea[][] logs = new JTextArea[][]{
+			new JTextArea[]{ null , null },
+			new JTextArea[]{ null , null },
+			new JTextArea[]{ null , null }
+		};
+
+	}
+	private AdvancedVars advanced = new AdvancedVars();
+	//}
 
 	// Constructor
 	public GUI(Videncode ve, JSON.Node node) {
@@ -542,7 +551,7 @@ public final class GUI extends JFrame {
 			t1.addMouseListener(new MouseListener() {
 				@Override
 				public final void mouseClicked(MouseEvent event) {
-					self.openURL("http://dnsev.github.com/ve/");
+					self.openURL("http://dnsev.github.io/ve/");
 				}
 
 				@Override
@@ -584,7 +593,7 @@ public final class GUI extends JFrame {
 			t1.addMouseListener(new MouseListener() {
 				@Override
 				public final void mouseClicked(MouseEvent event) {
-					self.openURL("http://dnsev.github.com/ve/#changes");
+					self.openURL("http://dnsev.github.io/ve/#changes");
 				}
 
 				@Override
@@ -633,6 +642,12 @@ public final class GUI extends JFrame {
 		p1.add(tp1);
 		//}
 
+		//{ Tab : Advanced
+		this.tabAdvanced = new JPanel();
+		this.tabAdvanced.setLayout(new BoxLayout(this.tabAdvanced, BoxLayout.X_AXIS));
+		this.tabAdvanced.setOpaque(false);
+		//}
+
 		//{ Tab : Encode
 		JPanel encodePanel = new JPanel();
 		encodePanel.setLayout(new BoxLayout(encodePanel, BoxLayout.X_AXIS));
@@ -675,6 +690,10 @@ public final class GUI extends JFrame {
 			tp1.setBackgroundAt(i, null);
 		}
 		this.setupTabEncode(encodePanel);
+		this.setupTabAdvanced(this.tabAdvanced);
+		if (this.tabAdvancedEnabled) {
+			this.tabManager.insertTab("Advanced", null, this.tabAdvanced, null, 0);
+		}
 
 		// Trigger update events
 		this.updateVideoAutoQualityProfileComboBox();
@@ -795,7 +814,7 @@ public final class GUI extends JFrame {
 						JOptionPane.ERROR_MESSAGE,
 						null,
 						null,
-						"http://dnsev.github.com/ve/"
+						"http://dnsev.github.io/ve/"
 					);
 				}
 			});
@@ -909,6 +928,13 @@ public final class GUI extends JFrame {
 		}
 		catch (Exception e) {}
 
+		// Advanced
+		try {
+			boolean b = node.getObject().get("app").getObject().get("show_advanced_tab").getBoolean();
+			this.tabAdvancedEnabled = b;
+		}
+		catch (Exception e) {}
+
 		// Startup checks
 		try {
 			boolean b = node.getObject().get("ffmpeg").getObject().get("statup_check").getBoolean();
@@ -935,6 +961,7 @@ public final class GUI extends JFrame {
 		.set("default_tab", JSON.node(this.defaultTab));
 
 		node.get("app")
+		.set("show_advanced_tab", JSON.node(new Boolean(this.tabAdvancedEnabled)))
 		.set("update_check", JSON.node(new Boolean(this.updateStartupCheck)))
 		.set("local_look", JSON.node(new Boolean(this.useLocalLook)));
 
@@ -1034,7 +1061,7 @@ public final class GUI extends JFrame {
 		Thread t = new Thread() {
 			@Override
 			public final void run() {
-				final String response = GUI.httpGET("http://dnsev.github.com/ve/changelog.txt");
+				final String response = GUI.httpGET("http://dnsev.github.io/ve/changelog.txt");
 				if (response != null) {
 					SwingUtilities.invokeLater(new Runnable() {
 						@Override
@@ -3318,7 +3345,7 @@ public final class GUI extends JFrame {
 
 		// Status
 		this.setupTabEncodeStatus(leftPanel);
-		this.setupTabEncodeStatusLog(leftMain);
+		//this.setupTabEncodeStatusLog(leftMain);
 		// Settings
 		this.setupTabEncodeSettings(rightPanel);
 	}
@@ -3678,7 +3705,7 @@ public final class GUI extends JFrame {
 		text.addMouseListener(new MouseListener() {
 			@Override
 			public final void mouseClicked(MouseEvent event) {
-				self.openURL("http://dnsev.github.com/ve/#api/test");
+				self.openURL("http://dnsev.github.io/ve/#api/test");
 			}
 
 			@Override
@@ -4030,6 +4057,52 @@ public final class GUI extends JFrame {
 			}
 		});
 		//}
+
+		//{ Advanced
+		c.weightx = 0.5;
+		c.gridx = 0;
+		++c.gridy;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.fill = GridBagConstraints.NONE;
+		container.add(text = new JLabel("Advanced tab"), c);
+		text.setFont(this.fonts.text);
+		text.setForeground(this.colors.text);
+
+		++c.gridx;
+		c.weightx = 0.0;
+		container.add(pad = new JPanel(), c);
+		pad.setPreferredSize(new Dimension(10, 0));
+
+		++c.gridx;
+		c.weightx = 0.5;
+		c.anchor = GridBagConstraints.LINE_START;
+		container.add(this.settings.appShowAdvancedTab = new JCheckBox("show"), c);
+		this.settings.appShowAdvancedTab.setFont(this.fonts.text);
+		this.settings.appShowAdvancedTab.setForeground(this.colors.text);
+		this.settings.appShowAdvancedTab.setSelected(this.tabAdvancedEnabled);
+		this.settings.appShowAdvancedTab.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 4));
+		this.settings.appShowAdvancedTab.setOpaque(false);
+		this.settings.appShowAdvancedTab.addActionListener(new ActionListener(){
+			@Override
+			public final void actionPerformed(ActionEvent event) {
+				self.tabAdvancedEnabled = ((JCheckBox) event.getSource()).isSelected();
+				self.enableSaveSettingsButton();
+
+				if (self.tabAdvancedEnabled) {
+					if (self.tabAdvanced.getParent() == null) {
+						self.tabManager.insertTab("Advanced", null, self.tabAdvanced, null, 0);
+					}
+				}
+				else {
+					if (self.tabAdvanced.getParent() != null) {
+						self.tabManager.removeTabAt(0);
+						self.tabManager.revalidate();
+						self.tabManager.repaint();
+					}
+				}
+			}
+		});
+		//}
 	}
 	private final void setupTabEncodeSettingsAudio(JPanel container) {
 		final GUI self = this;
@@ -4338,7 +4411,46 @@ public final class GUI extends JFrame {
 		});
 		//}
 	}
-	private final void setupTabEncodeStatusLog(JPanel container) {
+
+
+	private final void setupTabAdvanced(JPanel container) {
+		JLabel text;
+		JPanel panel, leftPanel, leftMain, rightPanel, pad;
+		TitledBorder border;
+
+		// Panels
+		container.setLayout(new GridLayout(1, 2));
+
+		container.add((panel = new JPanel()));
+		panel.setLayout(new BorderLayout());
+		panel.setOpaque(false);
+
+		panel.add((leftPanel = new JPanel()), BorderLayout.PAGE_START);
+		leftPanel.setLayout(new GridBagLayout());
+		leftPanel.setOpaque(false);
+
+		panel.add((leftMain = new JPanel()), BorderLayout.CENTER);
+		leftMain.setLayout(new GridBagLayout());
+		leftMain.setOpaque(false);
+
+		container.add((panel = new JPanel()));
+		panel.setLayout(new BorderLayout());
+		panel.setOpaque(false);
+
+		border = BorderFactory.createTitledBorder(null, "FFmpeg Options", TitledBorder.CENTER, TitledBorder.TOP, this.fonts.text, this.colors.text);
+		border.setBorder(BorderFactory.createLineBorder(this.colors.backgroundDark));
+		panel.setBorder(border);
+
+		panel.add((rightPanel = new JPanel()), BorderLayout.PAGE_START);
+		rightPanel.setLayout(new GridBagLayout());
+		rightPanel.setOpaque(false);
+
+		// Status
+		this.setupTabAdvancedStatusLog(leftMain);
+		// Settings
+		//this.setupTabEncodeSettings(rightPanel);
+	}
+	private final void setupTabAdvancedStatusLog(JPanel container) {
 		GridBagConstraints gc = new GridBagConstraints();
 		JLabel text;
 		JPanel section;
@@ -4359,23 +4471,23 @@ public final class GUI extends JFrame {
 		border.setBorder(BorderFactory.createLineBorder(this.colors.backgroundDark));
 		section.setBorder(border);
 
-		section.add(scroll = new JScrollPane(this.encode.logs[0][0] = new JTextArea()));
+		section.add(scroll = new JScrollPane(this.advanced.logs[0][0] = new JTextArea()));
 		scroll.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0, 0, 0, 1), BorderFactory.createLineBorder(this.colors.textLight1)));
 		scroll.setOpaque(false);
-		this.encode.logs[0][0].setOpaque(false);
-		this.encode.logs[0][0].setForeground(this.colors.text);
-		this.encode.logs[0][0].setFont(this.fonts.logText);
-		this.encode.logs[0][0].setWrapStyleWord(true);
-		this.encode.logs[0][0].setEditable(false);
+		this.advanced.logs[0][0].setOpaque(false);
+		this.advanced.logs[0][0].setForeground(this.colors.text);
+		this.advanced.logs[0][0].setFont(this.fonts.logText);
+		this.advanced.logs[0][0].setWrapStyleWord(true);
+		this.advanced.logs[0][0].setEditable(false);
 
-		section.add(scroll = new JScrollPane(this.encode.logs[0][1] = new JTextArea()));
+		section.add(scroll = new JScrollPane(this.advanced.logs[0][1] = new JTextArea()));
 		scroll.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0), BorderFactory.createLineBorder(this.colors.textLight1)));
 		scroll.setOpaque(false);
-		this.encode.logs[0][1].setOpaque(false);
-		this.encode.logs[0][1].setForeground(this.colors.text);
-		this.encode.logs[0][1].setFont(this.fonts.logText);
-		this.encode.logs[0][1].setWrapStyleWord(true);
-		this.encode.logs[0][1].setEditable(false);
+		this.advanced.logs[0][1].setOpaque(false);
+		this.advanced.logs[0][1].setForeground(this.colors.text);
+		this.advanced.logs[0][1].setFont(this.fonts.logText);
+		this.advanced.logs[0][1].setWrapStyleWord(true);
+		this.advanced.logs[0][1].setEditable(false);
 		//}
 		//{ Audio logs
 		++gc.gridy;
@@ -4387,23 +4499,23 @@ public final class GUI extends JFrame {
 		section.setBorder(border);
 
 
-		section.add(scroll = new JScrollPane(this.encode.logs[1][0] = new JTextArea()));
+		section.add(scroll = new JScrollPane(this.advanced.logs[1][0] = new JTextArea()));
 		scroll.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0, 0, 0, 1), BorderFactory.createLineBorder(this.colors.textLight1)));
 		scroll.setOpaque(false);
-		this.encode.logs[1][0].setOpaque(false);
-		this.encode.logs[1][0].setForeground(this.colors.text);
-		this.encode.logs[1][0].setFont(this.fonts.logText);
-		this.encode.logs[1][0].setWrapStyleWord(true);
-		this.encode.logs[1][0].setEditable(false);
+		this.advanced.logs[1][0].setOpaque(false);
+		this.advanced.logs[1][0].setForeground(this.colors.text);
+		this.advanced.logs[1][0].setFont(this.fonts.logText);
+		this.advanced.logs[1][0].setWrapStyleWord(true);
+		this.advanced.logs[1][0].setEditable(false);
 
-		section.add(scroll = new JScrollPane(this.encode.logs[1][1] = new JTextArea()));
+		section.add(scroll = new JScrollPane(this.advanced.logs[1][1] = new JTextArea()));
 		scroll.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0), BorderFactory.createLineBorder(this.colors.textLight1)));
 		scroll.setOpaque(false);
-		this.encode.logs[1][1].setOpaque(false);
-		this.encode.logs[1][1].setForeground(this.colors.text);
-		this.encode.logs[1][1].setFont(this.fonts.logText);
-		this.encode.logs[1][1].setWrapStyleWord(true);
-		this.encode.logs[1][1].setEditable(false);
+		this.advanced.logs[1][1].setOpaque(false);
+		this.advanced.logs[1][1].setForeground(this.colors.text);
+		this.advanced.logs[1][1].setFont(this.fonts.logText);
+		this.advanced.logs[1][1].setWrapStyleWord(true);
+		this.advanced.logs[1][1].setEditable(false);
 		//}
 		//{ Video logs
 		++gc.gridy;
@@ -4415,23 +4527,23 @@ public final class GUI extends JFrame {
 		section.setBorder(border);
 
 
-		section.add(scroll = new JScrollPane(this.encode.logs[2][0] = new JTextArea()));
+		section.add(scroll = new JScrollPane(this.advanced.logs[2][0] = new JTextArea()));
 		scroll.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0, 0, 0, 1), BorderFactory.createLineBorder(this.colors.textLight1)));
 		scroll.setOpaque(false);
-		this.encode.logs[2][0].setOpaque(false);
-		this.encode.logs[2][0].setForeground(this.colors.text);
-		this.encode.logs[2][0].setFont(this.fonts.logText);
-		this.encode.logs[2][0].setWrapStyleWord(true);
-		this.encode.logs[2][0].setEditable(false);
+		this.advanced.logs[2][0].setOpaque(false);
+		this.advanced.logs[2][0].setForeground(this.colors.text);
+		this.advanced.logs[2][0].setFont(this.fonts.logText);
+		this.advanced.logs[2][0].setWrapStyleWord(true);
+		this.advanced.logs[2][0].setEditable(false);
 
-		section.add(scroll = new JScrollPane(this.encode.logs[2][1] = new JTextArea()));
+		section.add(scroll = new JScrollPane(this.advanced.logs[2][1] = new JTextArea()));
 		scroll.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0), BorderFactory.createLineBorder(this.colors.textLight1)));
 		scroll.setOpaque(false);
-		this.encode.logs[2][1].setOpaque(false);
-		this.encode.logs[2][1].setForeground(this.colors.text);
-		this.encode.logs[2][1].setFont(this.fonts.logText);
-		this.encode.logs[2][1].setWrapStyleWord(true);
-		this.encode.logs[2][1].setEditable(false);
+		this.advanced.logs[2][1].setOpaque(false);
+		this.advanced.logs[2][1].setForeground(this.colors.text);
+		this.advanced.logs[2][1].setFont(this.fonts.logText);
+		this.advanced.logs[2][1].setWrapStyleWord(true);
+		this.advanced.logs[2][1].setEditable(false);
 		//}
 	}
 
@@ -6218,29 +6330,29 @@ public final class GUI extends JFrame {
 	private final void onEncodeLogEvent(int type, boolean clear, String cmdText, String infoText, String progressText) {
 		if (clear) {
 			// Clear
-			for (int i = 0; i < this.encode.logs[type].length; ++i) {
-				this.encode.logs[type][i].setText("");
+			for (int i = 0; i < this.advanced.logs[type].length; ++i) {
+				this.advanced.logs[type][i].setText("");
 			}
 		}
 		if (cmdText != null) {
 			String separator = "----------------------------------------\n";
 			String current;
-			for (int i = 0; i < this.encode.logs[type].length; ++i) {
-				current = this.encode.logs[type][i].getText();
+			for (int i = 0; i < this.advanced.logs[type].length; ++i) {
+				current = this.advanced.logs[type][i].getText();
 				if (current.length() > i && current.charAt(current.length() - 1) != '\n') {
-					this.encode.logs[type][i].append("\n");
+					this.advanced.logs[type][i].append("\n");
 				}
-				this.encode.logs[type][i].append(separator);
-				this.encode.logs[type][i].append(cmdText);
-				this.encode.logs[type][i].append("\n");
-				this.encode.logs[type][i].append(separator);
+				this.advanced.logs[type][i].append(separator);
+				this.advanced.logs[type][i].append(cmdText);
+				this.advanced.logs[type][i].append("\n");
+				this.advanced.logs[type][i].append(separator);
 			}
 		}
 		if (infoText != null) {
-			this.encode.logs[type][0].append(infoText);
+			this.advanced.logs[type][0].append(infoText);
 		}
 		if (progressText != null) {
-			this.encode.logs[type][1].append(progressText);
+			this.advanced.logs[type][1].append(progressText);
 		}
 	}
 
