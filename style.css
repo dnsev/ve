@@ -691,6 +691,5 @@ a.InstallLink:active {
 }
 
 .Highlighted, .UnstyledLink.Highlighted {
-	background: #7b1cb1 !important;
-	color: #debdf1 !important;
+	background: #debdf1 !important;
 }

@@ -1,3 +1,10 @@
+1.6
+- Moved the encoding logs to a new Advanced tab
+- Added a setting to toggle the Advanced tab display (off by default)
+- Now only displays one error when ffmpeg isn't installed
+- Homepage domain update
+- Changed how the video framerates are detected, and anything detected at 1000+ defaults to 30
+
 1.5
 - Changed locale settings due to numbers being formatted improperly
 - Added an option to use the "Java" look and feel
