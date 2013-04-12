@@ -367,6 +367,7 @@ public final class Videncode extends ThreadManager {
 	private static abstract class ScreenshotGenerator extends ProgressCallbackThread {
 		private File inputFile = null;
 		private File outputFile = null;
+		private File outputFileDir = null;
 		private double time = 0.0;
 		private int quality = 0;
 		private Boolean canceled = false;
@@ -405,6 +406,7 @@ public final class Videncode extends ThreadManager {
 				this.copySource = false;
 			}
 
+			this.outputFileDir = outputDirectory;
 			this.outputFile = new File(outputDirectory, (outputFilename + ext));
 			for (int i = 1; this.outputFile.exists(); ++i) {
 				this.outputFile = new File(outputDirectory, (outputFilename + "[" + i + "]" + ext));
@@ -508,7 +510,7 @@ public final class Videncode extends ThreadManager {
 				params.add(this.outputFile.getAbsolutePath());
 
 				this.onCommandGenerate(this.paramArrayToString(params));
-				this.infoProcess = Runtime.getRuntime().exec(params.toArray(new String[params.size()]));
+				this.infoProcess = Runtime.getRuntime().exec(params.toArray(new String[params.size()]), null, this.outputFileDir);
 			}
 			catch (IOException e) {
 				this.infoProcess = null;
@@ -575,6 +577,7 @@ public final class Videncode extends ThreadManager {
 
 		private File inputFile = null;
 		private File outputFile = null;
+		private File outputFileDir = null;
 		private File wavFile = null;
 		private double start = 0.0;
 		private double length = 0.0;
@@ -601,6 +604,7 @@ public final class Videncode extends ThreadManager {
 
 			String ext = ".ogg";
 
+			this.outputFileDir = outputDirectory;
 			this.outputFile = new File(outputDirectory, (outputFilename + ext));
 			for (int i = 1; this.outputFile.exists(); ++i) {
 				this.outputFile = new File(outputDirectory, (outputFilename + "[" + i + "]" + ext));
@@ -705,7 +709,7 @@ public final class Videncode extends ThreadManager {
 					}
 
 					this.onCommandGenerate(this.paramArrayToString(params));
-					this.infoProcess = Runtime.getRuntime().exec(params.toArray(new String[params.size()]));
+					this.infoProcess = Runtime.getRuntime().exec(params.toArray(new String[params.size()]), null, this.outputFileDir);
 				}
 				catch (IOException e) {
 					this.infoProcess = null;
@@ -797,6 +801,7 @@ public final class Videncode extends ThreadManager {
 	private static abstract class VideoGenerator extends ProgressCallbackThread {
 		private File inputFile = null;
 		private File outputFile = null;
+		private File outputFileDir = null;
 		private double start = 0.0;
 		private double length = 0.0;
 		private Bitrate bitrate = null;
@@ -832,6 +837,7 @@ public final class Videncode extends ThreadManager {
 
 			String ext = ".webm";
 
+			this.outputFileDir = outputDirectory;
 			this.outputFile = new File(outputDirectory, (outputFilename + ext));
 			for (int i = 1; this.outputFile.exists(); ++i) {
 				this.outputFile = new File(outputDirectory, (outputFilename + "[" + i + "]" + ext));
@@ -955,7 +961,7 @@ public final class Videncode extends ThreadManager {
 						}));
 
 						this.onCommandGenerate(this.paramArrayToString(params));
-						this.infoProcess = Runtime.getRuntime().exec(params.toArray(new String[params.size()]));
+						this.infoProcess = Runtime.getRuntime().exec(params.toArray(new String[params.size()]), null, this.outputFileDir);
 					}
 					catch (IOException e) {
 						this.infoProcess = null;
@@ -1050,6 +1056,7 @@ public final class Videncode extends ThreadManager {
 		private Process infoProcess = null;
 
 		private File tempOutputFile = null;
+		private File tempOutputFileDir = null;
 		private File finalOutputFile = null;
 
 		private File imageFile = null;
@@ -1088,6 +1095,7 @@ public final class Videncode extends ThreadManager {
 
 			// Mux'd audio+video file
 			String ext = ".webm";
+			this.tempOutputFileDir = tempOutputDirectory;
 			this.tempOutputFile = new File(tempOutputDirectory, (tempOutputName + ext));
 			for (int i = 1; this.tempOutputFile.exists(); ++i) {
 				this.tempOutputFile = new File(tempOutputDirectory, (tempOutputName + "[" + i + "]" + ext));
@@ -1176,7 +1184,7 @@ public final class Videncode extends ThreadManager {
 					}));
 
 					this.onCommandGenerate(this.paramArrayToString(params));
-					this.infoProcess = Runtime.getRuntime().exec(params.toArray(new String[params.size()]));
+					this.infoProcess = Runtime.getRuntime().exec(params.toArray(new String[params.size()]), null, this.tempOutputFileDir);
 				}
 				catch (IOException e) {
 					this.infoProcess = null;
@@ -1793,7 +1801,7 @@ public final class Videncode extends ThreadManager {
 				"-print_format", "json",
 				"-show_format",
 				"-show_streams"
-			});
+			}, null, this.getTempDir());
 		}
 		catch (IOException e) {
 			infoProcess = null;
@@ -4219,13 +4227,14 @@ public final class Videncode extends ThreadManager {
 
 	// Other
 	public final void testFFmpegInstall(final Runnable r) {
+		final Videncode self = this;
 		Thread t = new Thread() {
 			@Override
 			public final void run() {
 				// Test ffmpeg
 				Process p = null;
 				try {
-					p = Runtime.getRuntime().exec(new String[]{ "ffmpeg" , "-version" });
+					p = Runtime.getRuntime().exec(new String[]{ "ffmpeg" , "-version" }, null, self.getTempDir());
 				}
 				catch (IOException e) {
 					p = null;
@@ -4242,7 +4251,7 @@ public final class Videncode extends ThreadManager {
 				// Test ffprobe
 				p = null;
 				try {
-					p = Runtime.getRuntime().exec(new String[]{ "ffprobe" , "-version" });
+					p = Runtime.getRuntime().exec(new String[]{ "ffprobe" , "-version" }, null, self.getTempDir());
 				}
 				catch (IOException e) {
 					p = null;
