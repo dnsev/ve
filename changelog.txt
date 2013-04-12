@@ -1,3 +1,6 @@
+1.7
+- FFmpeg log files are now generated in the temp directory, so they are deleted on close
+
 1.6
 - Moved the encoding logs to a new Advanced tab
 - Added a setting to toggle the Advanced tab display (off by default)
