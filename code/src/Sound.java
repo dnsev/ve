@@ -35,12 +35,21 @@ class Sound {
 			this.clip.open(this.audioStream);
 		}
 		catch (UnsupportedAudioFileException e) {
+			this.input = null;
+			this.audioStream = null;
+			this.clip = null;
 			return;
 		}
 		catch (IOException e) {
+			this.input = null;
+			this.audioStream = null;
+			this.clip = null;
 			return;
 		}
 		catch (LineUnavailableException e) {
+			this.input = null;
+			this.audioStream = null;
+			this.clip = null;
 			return;
 		}
 
@@ -54,6 +63,8 @@ class Sound {
 		this.clip.start();
 	}
 	public final void stop() {
+		if (!this.valid) return;
+
 		this.clip.stop();
 		this.clip.setFramePosition(0);
 	}

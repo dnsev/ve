@@ -676,7 +676,14 @@ public final class Videncode extends ThreadManager {
 					}
 					params.addAll(Arrays.asList(new String[]{
 						"-y",
-						"-v", "info",
+						"-v", "info"
+					}));
+					/*if (pass == 0) {
+						params.addAll(Arrays.asList(new String[]{
+							"-ss", Videncode.timeToString(this.start),
+						}));
+					}*/
+					params.addAll(Arrays.asList(new String[]{
 						"-i", (pass == 0 ? this.inputFile.getAbsolutePath() : this.outputFile.getAbsolutePath()),
 						"-map_metadata", "-1",
 						"-vn",
@@ -694,7 +701,7 @@ public final class Videncode extends ThreadManager {
 							params.addAll(Arrays.asList(new String[]{ "-ar" , Integer.valueOf(this.sampleRate.getSampleRate()).toString() }));
 						}
 						if (this.channelCount.getChannelCount() > 0) {
-							params.addAll(Arrays.asList(new String[]{ "-ac" , Integer.valueOf(this.channelCount.getChannelCount()).toString() }));
+							params.addAll(Arrays.asList(new String[]{ "-ac" , Integer.valueOf(Math.min(2, this.channelCount.getChannelCount())).toString() }));
 						}
 
 						params.addAll(Arrays.asList(new String[]{
@@ -915,11 +922,11 @@ public final class Videncode extends ThreadManager {
 						params.addAll(Arrays.asList(new String[]{
 							"-y",
 							"-v", "info",
+							"-ss", Videncode.timeToString(this.start),
 							"-i", this.inputFile.getAbsolutePath(),
 							"-an",
 							"-map_metadata", "-1",
 							"-codec:v", "libvpx",
-							"-ss", Videncode.timeToString(this.start),
 							"-t", Videncode.timeToString(this.length),
 							"-r", Double.valueOf(this.framerate.getFrameRate()).toString(),
 							"-s", Integer.valueOf(this.videoSize.width).toString() + "x" + Integer.valueOf(this.videoSize.height).toString(),
