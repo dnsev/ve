@@ -10,6 +10,7 @@ import javax.swing.border.*;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.event.*;
 import javax.swing.filechooser.*;
+import javax.swing.text.Document;
 
 import java.net.URL;
 import java.net.URI;
@@ -296,7 +297,7 @@ public final class GUI extends JFrame {
 	private boolean videoEncodeAutoQualityEnabledDefault = true;
 	private boolean videoEncodeAutoQualityEnabled = this.videoEncodeAutoQualityEnabledDefault;
 	private JCheckBox videoEncodeAutoQualitySelect = null;
-	private JRadioButton[] videoEncodeModeButtons = new JRadioButton[]{ null , null , null };
+	private JRadioButton[] videoEncodeModeButtons = new JRadioButton[]{ null , null };
 	private JLabel fileLabelVideo = null;
 	private JLabel videoBitrateDisplay = null;
 
@@ -447,6 +448,10 @@ public final class GUI extends JFrame {
 			new JTextArea[]{ null , null },
 			new JTextArea[]{ null , null },
 			new JTextArea[]{ null , null }
+		};
+
+		private JTextArea[] ffmpegSettings = new JTextArea[]{
+			null , null
 		};
 
 	}
@@ -3345,7 +3350,6 @@ public final class GUI extends JFrame {
 
 		// Status
 		this.setupTabEncodeStatus(leftPanel);
-		//this.setupTabEncodeStatusLog(leftMain);
 		// Settings
 		this.setupTabEncodeSettings(rightPanel);
 	}
@@ -4415,40 +4419,35 @@ public final class GUI extends JFrame {
 
 	private final void setupTabAdvanced(JPanel container) {
 		JLabel text;
-		JPanel panel, leftPanel, leftMain, rightPanel, pad;
+		JPanel panel, leftPanel, rightPanel, pad;
 		TitledBorder border;
 
 		// Panels
 		container.setLayout(new GridLayout(1, 2));
 
+
 		container.add((panel = new JPanel()));
 		panel.setLayout(new BorderLayout());
 		panel.setOpaque(false);
 
-		panel.add((leftPanel = new JPanel()), BorderLayout.PAGE_START);
+		panel.add((leftPanel = new JPanel()), BorderLayout.CENTER);
 		leftPanel.setLayout(new GridBagLayout());
 		leftPanel.setOpaque(false);
 
-		panel.add((leftMain = new JPanel()), BorderLayout.CENTER);
-		leftMain.setLayout(new GridBagLayout());
-		leftMain.setOpaque(false);
 
 		container.add((panel = new JPanel()));
 		panel.setLayout(new BorderLayout());
 		panel.setOpaque(false);
 
-		border = BorderFactory.createTitledBorder(null, "FFmpeg Options", TitledBorder.CENTER, TitledBorder.TOP, this.fonts.text, this.colors.text);
-		border.setBorder(BorderFactory.createLineBorder(this.colors.backgroundDark));
-		panel.setBorder(border);
-
-		panel.add((rightPanel = new JPanel()), BorderLayout.PAGE_START);
+		panel.add((rightPanel = new JPanel()), BorderLayout.CENTER);
 		rightPanel.setLayout(new GridBagLayout());
 		rightPanel.setOpaque(false);
 
+
 		// Status
-		this.setupTabAdvancedStatusLog(leftMain);
+		this.setupTabAdvancedStatusLog(leftPanel);
 		// Settings
-		//this.setupTabEncodeSettings(rightPanel);
+		this.setupTabAdvancedEncodeSettings(rightPanel);
 	}
 	private final void setupTabAdvancedStatusLog(JPanel container) {
 		GridBagConstraints gc = new GridBagConstraints();
@@ -4545,6 +4544,127 @@ public final class GUI extends JFrame {
 		this.advanced.logs[2][1].setWrapStyleWord(true);
 		this.advanced.logs[2][1].setEditable(false);
 		//}
+	}
+	private final void setupTabAdvancedEncodeSettings(JPanel container) {
+		GridBagConstraints gc = new GridBagConstraints();
+		GridBagConstraints gc2 = new GridBagConstraints();
+		JLabel text;
+		JPanel section;
+		TitledBorder border;
+		JScrollPane scroll;
+
+		//{ Video
+		gc.weightx = 0.5;
+		gc.weighty = 0.5;
+		gc.gridx = 0;
+		gc.gridy = 0;
+		gc.anchor = GridBagConstraints.PAGE_START;
+		gc.fill = GridBagConstraints.BOTH;
+		container.add((section = new JPanel()), gc);
+		section.setLayout(new GridBagLayout());
+		section.setOpaque(false);
+		border = BorderFactory.createTitledBorder(null, "FFmpeg Video Options", TitledBorder.CENTER, TitledBorder.TOP, this.fonts.text, this.colors.text);
+		border.setBorder(BorderFactory.createLineBorder(this.colors.backgroundDark));
+		section.setBorder(border);
+
+		// Label
+		gc2.weightx = 0.5;
+		gc2.weighty = 0.0;
+		gc2.gridx = 0;
+		gc2.gridy = 0;
+		gc2.anchor = GridBagConstraints.PAGE_START;
+		gc2.fill = GridBagConstraints.BOTH;
+		JTextArea textarea;
+		section.add(textarea = new JTextArea(), gc2);
+		textarea.setText("ffmpeg -y -v info -ss <start> -i <input> -an -map_metadata -1 -codec:v libvpx -t <length> -r <framerate> -s <scale> -cpu-used 0 -threads <threads> [-maxrate <bitrate>] [-minrate <bitrate>] [-b:v <bitrate>] [-bufsize <bitrate>] [-pass <pass_number>] [EXTRA_PARAMS_INSERTED_HERE] -f webm <output>");
+		textarea.setFont(this.fonts.text);
+		textarea.setForeground(this.colors.text);
+		textarea.setAlignmentX(Component.LEFT_ALIGNMENT);
+		textarea.setWrapStyleWord(true);
+		textarea.setLineWrap(true);
+		textarea.setEditable(false);
+		textarea.setOpaque(false);
+
+		++gc2.gridy;
+		gc2.weighty = 0.5;
+		section.add(scroll = new JScrollPane(this.advanced.ffmpegSettings[0] = new JTextArea()), gc2);
+		scroll.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0, 0, 0, 1), BorderFactory.createLineBorder(this.colors.textLight1)));
+		scroll.setOpaque(false);
+		this.advanced.ffmpegSettings[0].setOpaque(false);
+		this.advanced.ffmpegSettings[0].setForeground(this.colors.text);
+		this.advanced.ffmpegSettings[0].setFont(this.fonts.logText);
+		this.advanced.ffmpegSettings[0].setWrapStyleWord(true);
+
+		//}
+		//{ Audio
+		++gc.gridy;
+		container.add((section = new JPanel()), gc);
+		section.setLayout(new GridBagLayout());
+		section.setOpaque(false);
+		border = BorderFactory.createTitledBorder(null, "FFmpeg Audio Options", TitledBorder.CENTER, TitledBorder.TOP, this.fonts.text, this.colors.text);
+		border.setBorder(BorderFactory.createLineBorder(this.colors.backgroundDark));
+		section.setBorder(border);
+
+		// Label
+		gc2.weightx = 0.5;
+		gc2.weighty = 0.0;
+		gc2.gridx = 0;
+		gc2.gridy = 0;
+		gc2.anchor = GridBagConstraints.PAGE_START;
+		gc2.fill = GridBagConstraints.BOTH;
+		section.add(textarea = new JTextArea(), gc2);
+		textarea.setText("ffmpeg -y -v info -i <file> -map_metadata -1 -vn -codec:a libvorbis -ss <start> -t <length> -b:a <audio_bitrate> [-ar <audio_rate>] [-ac <audio_channels>] [EXTRA_PARAMS_INSERTED_HERE] -f ogg <output_file>");
+		textarea.setFont(this.fonts.text);
+		textarea.setForeground(this.colors.text);
+		textarea.setAlignmentX(Component.LEFT_ALIGNMENT);
+		textarea.setWrapStyleWord(true);
+		textarea.setLineWrap(true);
+		textarea.setEditable(false);
+		textarea.setOpaque(false);
+
+		++gc2.gridy;
+		gc2.weighty = 0.5;
+		section.add(scroll = new JScrollPane(this.advanced.ffmpegSettings[1] = new JTextArea()), gc2);
+		scroll.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0, 0, 0, 1), BorderFactory.createLineBorder(this.colors.textLight1)));
+		scroll.setOpaque(false);
+		this.advanced.ffmpegSettings[1].setOpaque(false);
+		this.advanced.ffmpegSettings[1].setForeground(this.colors.text);
+		this.advanced.ffmpegSettings[1].setFont(this.fonts.logText);
+		this.advanced.ffmpegSettings[1].setWrapStyleWord(true);
+
+		//}
+
+		// Events
+		final GUI self = this;
+		DocumentListener cl = new DocumentListener(){
+			@Override
+			public final void insertUpdate(DocumentEvent event) {
+				this.onChange(event.getDocument());
+			}
+			@Override
+			public final void removeUpdate(DocumentEvent event) {
+				this.onChange(event.getDocument());
+			}
+			@Override
+			public final void changedUpdate(DocumentEvent event) {
+				this.onChange(event.getDocument());
+			}
+
+
+			private final void onChange(Document me) {
+				String value = "";
+				try {
+					value = me.getText(0, me.getLength());
+				}
+				catch (Exception e) {
+				}
+				self.videncode.setExtraOptions(
+					value, (me == self.advanced.ffmpegSettings[0].getDocument())
+				);
+			}
+		};
+		this.advanced.ffmpegSettings[0].getDocument().addDocumentListener(cl);
+		this.advanced.ffmpegSettings[1].getDocument().addDocumentListener(cl);
 	}
 
 

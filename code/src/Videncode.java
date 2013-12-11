@@ -499,7 +499,7 @@ public final class Videncode extends ThreadManager {
 				params.addAll(Arrays.asList(new String[]{
 					"-vframes", "1",
 					"-map_metadata", "-1",
-					"-an",
+					"-an", "-sn",
 					"-f", "rawvideo"
 				}));
 				if (this.imageSize.width > 0 && this.imageSize.height > 0) {
@@ -586,6 +586,7 @@ public final class Videncode extends ThreadManager {
 		private AudioChannelCount channelCount = null;
 		private AudioSampleRate sampleRate = null;
 		private Process infoProcess = null;
+		private ArrayList<String> extraParams = null;
 
 		public AudioClipGenerator(
 			final ThreadManager threadManager,
@@ -598,7 +599,8 @@ public final class Videncode extends ThreadManager {
 			final AudioChannelCount channelCount,
 			final AudioSampleRate sampleRate,
 			GeneratorProgressCallback callback,
-			boolean genSound
+			boolean genSound,
+			ArrayList<String> extraParams
 		) {
 			super(threadManager, callback, length, 0);
 
@@ -625,6 +627,7 @@ public final class Videncode extends ThreadManager {
 			this.bitrate = bitrate;
 			this.channelCount = channelCount;
 			this.sampleRate = sampleRate;
+			this.extraParams = extraParams;
 		}
 
 		protected abstract void onAudioGet(File f, Sound snd);
@@ -678,15 +681,10 @@ public final class Videncode extends ThreadManager {
 						"-y",
 						"-v", "info"
 					}));
-					/*if (pass == 0) {
-						params.addAll(Arrays.asList(new String[]{
-							"-ss", Videncode.timeToString(this.start),
-						}));
-					}*/
 					params.addAll(Arrays.asList(new String[]{
 						"-i", (pass == 0 ? this.inputFile.getAbsolutePath() : this.outputFile.getAbsolutePath()),
 						"-map_metadata", "-1",
-						"-vn",
+						"-vn", "-sn",
 					}));
 
 					if (pass == 0) {
@@ -703,6 +701,9 @@ public final class Videncode extends ThreadManager {
 						if (this.channelCount.getChannelCount() > 0) {
 							params.addAll(Arrays.asList(new String[]{ "-ac" , Integer.valueOf(Math.min(2, this.channelCount.getChannelCount())).toString() }));
 						}
+
+						// Extra params
+						params.addAll(this.extraParams);
 
 						params.addAll(Arrays.asList(new String[]{
 							"-f", "ogg", this.outputFile.getAbsolutePath(),
@@ -823,6 +824,7 @@ public final class Videncode extends ThreadManager {
 		private long maxFileSize = 0;
 		private boolean reEncodePossible = false;
 		private boolean stopped = false;
+		private ArrayList<String> extraParams = null;
 
 		public VideoGenerator(
 			final ThreadManager threadManager,
@@ -838,7 +840,8 @@ public final class Videncode extends ThreadManager {
 			int threads,
 			int quality,
 			long maxFileSize,
-			boolean reEncodePossible
+			boolean reEncodePossible,
+			ArrayList<String> extraParams
 		) {
 			super(threadManager, callback, length, framerate.getFrameRate());
 
@@ -861,6 +864,7 @@ public final class Videncode extends ThreadManager {
 			this.quality = quality;
 			this.maxFileSize = maxFileSize;
 			this.reEncodePossible = reEncodePossible;
+			this.extraParams = extraParams;
 		}
 
 		protected abstract void onVideoGet(File f);
@@ -902,7 +906,7 @@ public final class Videncode extends ThreadManager {
 			int quality = this.quality;
 			while (qualityLoop) {
 				qualityLoop = false;
-				int passMax = (quality <= 1 ? 2 : 1);
+				int passMax = (quality <= 0 ? 2 : 1);
 
 				for (int pass = 0; pass < passMax; ++pass) {
 					if (this.isCanceled()) {
@@ -924,7 +928,7 @@ public final class Videncode extends ThreadManager {
 							"-v", "info",
 							"-ss", Videncode.timeToString(this.start),
 							"-i", this.inputFile.getAbsolutePath(),
-							"-an",
+							"-an", "-sn",
 							"-map_metadata", "-1",
 							"-codec:v", "libvpx",
 							"-t", Videncode.timeToString(this.length),
@@ -938,18 +942,9 @@ public final class Videncode extends ThreadManager {
 								"-maxrate", Integer.valueOf(this.bitrate.getBitrate()).toString(),
 								"-b:v", Integer.valueOf(this.bitrate.getBitrate()).toString(),
 								"-bufsize", Integer.valueOf(this.bitrate.getBitrate()).toString(),
-								//"-crf", "10"
 							}));
 						}
-						if (quality == 1) { // okay
-							params.addAll(Arrays.asList(new String[]{
-								"-maxrate", Integer.valueOf(this.bitrate.getBitrate()).toString(),
-								"-b:v", Integer.valueOf(this.bitrate.getBitrate()).toString(),
-								"-bufsize", Integer.valueOf(this.bitrate.getBitrate()).toString(),
-								"-crf", "10"
-							}));
-						}
-						if (quality >= 2) { // fast
+						else if (quality >= 1) { // fast
 							params.addAll(Arrays.asList(new String[]{
 								"-maxrate", Integer.valueOf(this.bitrate.getBitrate()).toString(),
 								"-minrate", Integer.valueOf(this.bitrate.getBitrate()).toString(),
@@ -963,6 +958,10 @@ public final class Videncode extends ThreadManager {
 								"-pass", Integer.valueOf(pass + 1).toString()
 							}));
 						}
+
+						// Extra params
+						params.addAll(this.extraParams);
+
 						params.addAll(Arrays.asList(new String[]{
 							"-f", "webm", (pass + 1 == passMax ? this.outputFile.getAbsolutePath() : Videncode.getNullStreamName())
 						}));
@@ -1501,10 +1500,9 @@ public final class Videncode extends ThreadManager {
 	};
 	private AutoQualityProfile videoAutoQualityProfileDefault = this.videoAutoQualityProfiles[3];
 
-	private final String[] videoEncodingProfiles = new String[]{ "Best" , "Quick & Good" , "Fastest" };
+	private final String[] videoEncodingProfiles = new String[]{ "Best" , "Fastest" };
 	private final String[] videoEncodingProfileDescriptions = new String[]{
 		"Attempt to get the best possible encoding (may take more time)",
-		"Encode without trying to get the best video, but should still be pretty good",
 		"Encode the fastest (may sacrifice some quality)"
 	};
 	private int videoEncodingProfileDefault = 1;
@@ -1519,7 +1517,7 @@ public final class Videncode extends ThreadManager {
 	// Output settings
 	private Integer outputLock = new Integer(-1);
 
-	private long outputMaxFileSize = 1024 * 1024 * 3;
+	private long outputMaxFileSize = 1024 * 1000 * 3;
 	private int outputTagMaxLength = 100;
 	private int outputMaxThreads = Runtime.getRuntime().availableProcessors();
 	private String outputTag = "";
@@ -1620,6 +1618,7 @@ public final class Videncode extends ThreadManager {
 	// Other
 	private ArrayList<Thread> cleanupThreads = new ArrayList<Thread>();
 	private ArrayList<VidencodeEventListener> videoChangeListeners = new ArrayList<VidencodeEventListener>();
+	private String[] extraFFmpegOptions = new String[]{ "" , "" };
 
 
 	// Constructor
@@ -1683,7 +1682,7 @@ public final class Videncode extends ThreadManager {
 		// Video quality mode
 		try {
 			int quality = (int) node.getObject().get("settings").getObject().get("video_encoding_mode").getInteger();
-			if (quality > 2) quality = 2;
+			if (quality > 1) quality = 1;
 			else if (quality < 0) quality = 0;
 			this.videoEncodingProfileDefault = quality;
 			this.videoFileTempQuality = quality;
@@ -2936,7 +2935,8 @@ public final class Videncode extends ThreadManager {
 			channelCount,
 			sampleRate,
 			callback,
-			false
+			false,
+			this.parseCommandOptions(this.extraFFmpegOptions[1])
 		){
 			@Override
 			public void onAudioGet(File f, Sound snd) {
@@ -3045,7 +3045,8 @@ public final class Videncode extends ThreadManager {
 			threads,
 			quality,
 			max,
-			reEncodePossible
+			reEncodePossible,
+			this.parseCommandOptions(this.extraFFmpegOptions[0])
 		){
 			@Override
 			public void onVideoGet(File f) {
@@ -3154,7 +3155,8 @@ public final class Videncode extends ThreadManager {
 			channelCount,
 			sampleRate,
 			null,
-			true
+			true,
+			this.parseCommandOptions(this.extraFFmpegOptions[1])
 		) {
 			@Override
 			public void onAudioGet(File f, Sound snd) {
@@ -4206,6 +4208,79 @@ public final class Videncode extends ThreadManager {
 		q.bitrate = bitrate;
 
 		return q;
+	}
+
+
+	public final void setExtraOptions(String value, boolean isVideo) {
+		// Set extra options
+		this.extraFFmpegOptions[isVideo ? 0 : 1] = value;
+		if (isVideo) this.clearVideoFileTemp();
+		else this.clearAudioFileTemp();
+	}
+	public final ArrayList<String> parseCommandOptions(String value) {
+		// Create new
+		ArrayList<String> cmds = new ArrayList<String>();
+
+		// Parse
+		StringBuilder sb = new StringBuilder();
+		char quote = '\0';
+		boolean escaped = false;
+		char c;
+		boolean loop = true;
+		for (int i = 0; loop; ++i) {
+			if (i < value.length()) {
+				c = value.charAt(i);
+			}
+			else {
+				quote = '\0';
+				c = '\0';
+				loop = false;
+			}
+
+			if (quote != '\0') {
+				if (escaped) {
+					// End escape
+					escaped = false;
+					sb.append(c);
+				}
+				else {
+					if (c == '\\') {
+						// Start escape
+						escaped = true;
+					}
+					else if (c == quote) {
+						// End quote
+						quote = '\0';
+					}
+					else {
+						// Add char
+						sb.append(c);
+					}
+				}
+			}
+			else if (c == '"' || c == '\'') {
+				// Quoted string
+				quote = c;
+			}
+			else if (c > ' ') {
+				// Not whitespace: add
+				sb.append(c);
+			}
+			else {
+				if (sb.length() > 0) {
+					// Add command
+					cmds.add(sb.toString());
+					sb.setLength(0);
+				}
+			}
+		}
+
+		System.out.println(value);
+		System.out.println(cmds.size());
+		System.out.println(cmds.toString());
+
+		// Return
+		return cmds;
 	}
 
 

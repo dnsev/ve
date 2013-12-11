@@ -7,7 +7,7 @@
 		"extensions": {
 			"image": [ ".png" , ".jpg" , ".jpeg" , ".gif" ],
 			"audio": [ ".mp3" , ".ogg" , ".oga" , ".flac" , ".wav" ],
-			"video": null,
+			"video": [ ".mkv" , ".webm" , ".mp4" , ".divx" , ".xvid" , ".avi" , ".3gp" , ".wmv" , ".flv" , ".f4v" , ".mpg" , ".mpeg" , ".ts" ],
 			"output": [ ".ve*" , ".ev*" , "*" ],
 			"output_default": ".ve*"
 		}
@@ -24,7 +24,7 @@
 		"default_tab": "Video"
 	},
 	"settings": {
-		"output_max_file_size": 3145728,
+		"output_max_file_size": 3072000,
 		"video_encoding_mode": 1,
 		"video_auto_quality_on": true,
 		"video_auto_quality": "Average",
