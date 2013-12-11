@@ -4275,10 +4275,6 @@ public final class Videncode extends ThreadManager {
 			}
 		}
 
-		System.out.println(value);
-		System.out.println(cmds.size());
-		System.out.println(cmds.toString());
-
 		// Return
 		return cmds;
 	}
