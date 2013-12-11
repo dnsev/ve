@@ -1,3 +1,10 @@
+1.9
+- Added the ability to add custom command line parameters
+- Fixed some errors related to subtitles
+- Removed a quality option that wasn't really useful
+- Changed the default filesize limit to 3000KB instead of 3MB
+- Added a video file extension list
+
 1.8
 - Fixed a null pointer exception related to sound playback (although it affected nothing)
 - FFmpeg now seeks in videos faster, so encoding near the end of a video is faster
