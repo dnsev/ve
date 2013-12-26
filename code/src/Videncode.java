@@ -1031,7 +1031,7 @@ public final class Videncode extends ThreadManager {
 					}
 				}
 
-				if (this.outputFile.length() > this.maxFileSize) {
+				/*if (this.outputFile.length() > this.maxFileSize) {
 					if (this.reEncodePossible) {
 						this.reEncodePossible = false;
 						qualityLoop = true;
@@ -1040,7 +1040,7 @@ public final class Videncode extends ThreadManager {
 						++quality;
 						qualityLoop = true;
 					}
-				}
+				}*/
 			}
 			// Done
 			this.completed(this.outputFile);
